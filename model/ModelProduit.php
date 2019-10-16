@@ -83,7 +83,29 @@ class ModelProduit
                 "id" => $id
             );
 
-        $req_prep->execute($values);
+            $req_prep->execute($values);
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function save()
+    {
+
+        $sql = "INSERT INTO `produits` (`nomProduit`, `description`, `prix`) VALUES (:nom, :descrip, :price);";
+        try {
+            $req_prep = Model::$pdo->prepare($sql);
+            $values = array(
+                "nom" => $this->nomProduit,
+                "descrip" => $this->description,
+                "price" => $this->prix
+                //nomdutag => valeur, ...
+            );
+
+            $req_prep->execute($values);
         } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
                 return false;
