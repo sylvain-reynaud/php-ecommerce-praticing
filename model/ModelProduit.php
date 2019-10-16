@@ -26,6 +26,21 @@ class ModelProduit
         return $this->idProduit;
     }
 
+    public function getName()
+    {
+        return $this->nomProduit;
+    }
+
+    public function getDesc()
+    {
+        return $this->description;
+    }
+
+    public function getPrice()
+    {
+        return $this->prix;
+    }
+
     public static function getAllProduits()
     {
 
