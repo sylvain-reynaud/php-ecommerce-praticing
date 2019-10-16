@@ -1,6 +1,6 @@
 <?php
 
-require_once File::build_path(array("controller","ControllerVoiture.php"));
+require_once File::build_path(array("controller","ControllerProduit.php"));
 
 if(isset($_GET['action'])){
     $action = $_GET['action'];
