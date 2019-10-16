@@ -29,6 +29,19 @@ class ControllerProduit {
         }
     }
 
+    public static function delete(){
+        $id= $_GET['id'];
+        $v = ModelProduit::deleteById($id); 
+        $controller = 'produits';
+        if (!$v) {
+            $controller="";
+            $view = 'error';
+            $pagetitle = 'Erreur !';
+            require(File::build_path(array("view", "view.php")));
+        }
+
+    }
+
     
 
 }

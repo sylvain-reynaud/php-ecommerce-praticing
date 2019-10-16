@@ -21,7 +21,8 @@ class ModelProduit
         }
     }
 
-    public function getIdProduit(){
+    public function getIdProduit()
+    {
         return $this->idProduit;
     }
 
@@ -37,18 +38,19 @@ class ModelProduit
         return $tab_prod;
     }
 
-    public static function getProduitById($id) {
+    public static function getProduitById($id)
+    {
         $sql = "SELECT * from produits WHERE idProduit=:nom_tag";
         // Préparation de la requête
         $req_prep = Model::$pdo->prepare($sql);
-    
+
         $values = array(
             "nom_tag" => $id,
             //nomdutag => valeur, ...
         );
         // On donne les valeurs et on exécute la requête   
         $req_prep->execute($values);
-    
+
         // On récupère les résultats comme précédemment
         $req_prep->setFetchMode(PDO::FETCH_CLASS, 'ModelProduit');
         $tab_prod = $req_prep->fetchAll();
@@ -56,8 +58,23 @@ class ModelProduit
         if (empty($tab_prod))
             return false;
         return $tab_prod[0];
-      }
-    
-}
+    }
+    public static function deleteById($id)
+    {
+        $sql = "DELETE FROM `produits` WHERE idproduit = :id;";
+        try {
+            $req_prep = Model::$pdo->prepare($sql);
+            $values = array(
+                "id" => $id
+            );
 
+        $req_prep->execute($values);
+        } catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
 ?>
