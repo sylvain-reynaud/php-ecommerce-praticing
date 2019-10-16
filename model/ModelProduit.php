@@ -57,6 +57,7 @@ class ModelProduit
             return false;
         return $tab_prod[0];
       }
+    
 }
 
 ?>

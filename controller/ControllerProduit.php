@@ -14,7 +14,19 @@ class ControllerProduit {
     }
 
     public static function read(){
-        
+        $id = $_GET['id'];
+        $v = ModelProduit::getProduitById($id);     //appel au modèle pour gerer la BD
+        $controller = 'produits';
+        if (!$v) {
+            $controller = '';
+            $view = 'error';
+            $pagetitle = 'Erreur !';
+            require(File::build_path(array("view", "view.php")));
+        } else {
+            $view = 'detail';
+            $pagetitle = 'Détails';
+            require(File::build_path(array("view", "view.php")));
+        }
     }
 
     
