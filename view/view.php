@@ -12,22 +12,36 @@
 </head>
 
 <body>
-    <header>
-        <ul>
-            <li><a href="index.php?action=readAll">Voir toutes les voitures</a></li>
-            <li><a href="index.php?action=readAll&controller=utilisateur">Utilisateurs</a></li>
-            <li><a href="index.php?action=readAll&controller=trajet">Trajets</a></li>
-        </ul>
-    </header>
+<header>
+    <nav>
+        <div class="nav-wrapper">
+            <a href="#" class="brand-logo">Logo</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="index.php?action=readAll">Voir toutes les voitures</a></li>
+                <li><a href="index.php?action=readAll&controller=utilisateur">Utilisateurs</a></li>
+                <li><a href="index.php?action=readAll&controller=trajet">Trajets</a></li>
+            </ul>
+        </div>
+    </nav>
+</header>
+<main>
+    <div class="container">
     <?php
     // Si $controleur='voiture' et $view='list',
     // alors $filepath="/chemin_du_site/view/voiture/list.php"
     $filepath = File::build_path(array("view", $controller, "$view.php"));
     require $filepath;
     ?>
-    <p style="border: 1px solid black;text-align:right;padding-right:1em;">
-        Site de covoiturage de Simon Moulin
-    </p>
+    </div>
+</main>
+    <footer class="page-footer">
+        <div class="footer-copyright">
+            <div class="container">
+                © 2019 Copyright Text
+                <a class="grey-text text-lighten-4 right" href="https://github.com/sylvain-reynaud/projet-php/">Repo Github</a>
+            </div>
+        </div>
+    </footer>
 </body>
 
 <!--    Js-->

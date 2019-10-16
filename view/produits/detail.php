@@ -1,7 +1,7 @@
 <div class="row">
 <!--    img  -->
     <div class="col s3">
-        <img class="materialboxed" width="300" src="images/<?php echo $p->getId() ?>.jpg">
+        <img class="materialboxed" width="200" src="images/<?php echo $p->getId() ?>.jpg">
     </div>
 <!--    titre + desc-->
     <div class="col s6">
