@@ -14,7 +14,32 @@ class ControllerProduit {
     }
 
     public static function read(){
-        
+        $id = $_GET['id'];
+        $p = ModelProduit::getProduitById($id);     //appel au modèle pour gerer la BD
+        $controller = 'produits';
+        if (!$p) {
+            $controller = '';
+            $view = 'error';
+            $pagetitle = 'Erreur !';
+            require(File::build_path(array("view", "view.php")));
+        } else {
+            $view = 'detail';
+            $pagetitle = 'Détails';
+            require(File::build_path(array("view", "view.php")));
+        }
+    }
+
+    public static function delete(){
+        $id= $_GET['id'];
+        $v = ModelProduit::deleteById($id); 
+        $controller = 'produits';
+        if (!$v) {
+            $controller="";
+            $view = 'error';
+            $pagetitle = 'Erreur !';
+            require(File::build_path(array("view", "view.php")));
+        }
+
     }
 
     
