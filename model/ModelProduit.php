@@ -21,7 +21,7 @@ class ModelProduit
         }
     }
 
-    public function getIdProduit()
+    public function getId()
     {
         return $this->idProduit;
     }

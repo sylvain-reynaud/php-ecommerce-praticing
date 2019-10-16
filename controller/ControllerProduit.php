@@ -15,9 +15,9 @@ class ControllerProduit {
 
     public static function read(){
         $id = $_GET['id'];
-        $v = ModelProduit::getProduitById($id);     //appel au modèle pour gerer la BD
+        $p = ModelProduit::getProduitById($id);     //appel au modèle pour gerer la BD
         $controller = 'produits';
-        if (!$v) {
+        if (!$p) {
             $controller = '';
             $view = 'error';
             $pagetitle = 'Erreur !';
