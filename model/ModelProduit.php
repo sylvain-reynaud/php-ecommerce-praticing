@@ -9,8 +9,9 @@ class ModelProduit
     private $nomProduit;
     private $description;
     private $prix;
+    private $imageUrl;
 
-    public function __construct($id = NULL, $nom = NULL, $desc = NULL, $prix = NULL)
+    public function __construct($id = NULL, $nom = NULL, $desc = NULL, $prix = NULL, $image = NULL)
     {
         if (!is_null($id) && !is_null($nom) && !is_null($desc) && !is_null($prix)) {
 
@@ -18,6 +19,7 @@ class ModelProduit
             $this->nomProduit = $nom;
             $this->description = $desc;
             $this->prix = $prix;
+            $this->imageUrl = $image;
         }
     }
 
@@ -40,6 +42,16 @@ class ModelProduit
     {
         return $this->prix;
     }
+
+    /**
+     * @return null
+     */
+    public function getImageUrl()
+    {
+        return $this->imageUrl;
+    }
+
+
 
     public static function getAllProduits()
     {
@@ -94,15 +106,14 @@ class ModelProduit
 
     public function save()
     {
-
-        $sql = "INSERT INTO `produits` (`nomProduit`, `description`, `prix`) VALUES (:nom, :descrip, :price);";
+        $sql = "INSERT INTO `produits` (`nomProduit`, `description`, `prix`, `imageUrl`) VALUES (:nom, :descrip, :price, :imageUrl);";
         try {
             $req_prep = Model::$pdo->prepare($sql);
             $values = array(
                 "nom" => $this->nomProduit,
                 "descrip" => $this->description,
-                "price" => $this->prix
-                //nomdutag => valeur, ...
+                "price" => $this->prix,
+                "imageUrl" => $this->imageUrl
             );
 
             $req_prep->execute($values);
