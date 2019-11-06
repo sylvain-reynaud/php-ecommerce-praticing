@@ -1,7 +1,7 @@
 <div class="row">
 <!--    img  -->
     <div class="col s3">
-        <img class="materialboxed responsive-img" width="200" src="images/<?php echo $p->getId() ?>.jpg">
+        <img class="materialboxed responsive-img" width="200" src="images/<?php echo $p->getImageUrl()?>">
     </div>
 <!--    titre + desc-->
     <div class="col s6">
@@ -12,7 +12,7 @@
 <!--            <img src="images/--><?php //echo htmlspecialchars($p->getSeller()->getId()) ?><!--.jpg" alt="Contact the seller">-->
 <!--            --><?php //echo htmlspecialchars($p->getSeller()->getName()) ?>
             <img src="images/2.jpg" alt="Contact the seller">
-            <?php echo htmlspecialchars("Bob") ?>
+            <?php echo htmlspecialchars("Vendeur officiel") ?>
         </div>
     </div>
     <div class="col s3">
