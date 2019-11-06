@@ -59,7 +59,21 @@ class ControllerProduit
 
     public static function created(){
     {
-        $prod = new ModelProduit(0,$_GET['name'], $_GET['desc'], $_GET['price']);
+
+        
+        $name = $_FILES['fileToUpload']['name'];
+        $pic_path = "images/$name";
+
+        if (is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
+            echo "ok";
+         }
+        if (!move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $pic_path)) {
+            echo "erreur upload";
+            //$name="default_image.jpg";
+        }
+        
+
+        $prod = new ModelProduit(0,$_POST['name'], $_POST['desc'], $_POST['price'], $name);
 
         $saveEx = $prod->save();
 
