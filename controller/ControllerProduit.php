@@ -37,6 +37,7 @@ class ControllerProduit
                 $_SESSION['panier'] += array($_GET["id"] => array("quantity" => 1));
             }
         }
+        self::readAll();
     }
 
     public static function removeFromCart()
@@ -46,6 +47,7 @@ class ControllerProduit
                 unset($_SESSION['panier'][$_GET["id"]]);
             }
         }
+        self::readCart();
     }
 
     public static function readAll()
