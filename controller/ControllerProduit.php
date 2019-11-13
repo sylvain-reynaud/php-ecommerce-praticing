@@ -58,14 +58,30 @@ class ControllerProduit
         $controller = "produits";
         $view = 'create';
         $pagetitle = "Creation d'un produit";
+        $type= 'create';    
+
+        $id = '';
+        $name = '';
+        $desc = '';
+        $prix = '';
+
         require(File::build_path(array("view", "view.php")));
     }
 
     public static function update()
     {
         $controller = "produits";
-        $view = 'update';
+        $view = 'create';
         $pagetitle = "Modification d'un produit";
+        $type = 'update';
+
+        $pro = ModelProduit::getProduitById($_GET['id']);
+    
+
+        $id = $pro->getId();
+        $name = $pro->getName();
+        $desc = $pro->getDesc();
+        $prix = $pro->getPrice();
         require(File::build_path(array("view", "view.php")));
     }
 
