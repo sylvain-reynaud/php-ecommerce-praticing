@@ -50,6 +50,7 @@ class ControllerProduit
             $pagetitle = 'Erreur !';
             require(File::build_path(array("view", "view.php")));
         }
+        self::readAll();
     }
 
     public static function create()
