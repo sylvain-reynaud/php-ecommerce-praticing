@@ -5,6 +5,49 @@ require_once File::build_path(array("model", "ModelProduit.php"));
 class ControllerProduit
 {
 
+    public static function readCart()
+    {
+        $tab_prod = $_SESSION['panier'];
+
+        foreach ($tab_prod as $id => $quantity) {
+            $tab_prod[$id] += array("obj" => ModelProduit::getProduitById($id));
+        }
+        $controller = 'produits';
+        $view = 'cart';
+        $pagetitle = 'Mon panier';
+        require(File::build_path(array("view", "view.php")));
+    }
+
+    public static function countProductsInCart() {
+        $sum = 0;
+        $tab_prod = $_SESSION['panier'];
+
+        foreach ($tab_prod as $data) {
+            $sum += $data["quantity"];
+        }
+        return $sum;
+    }
+
+    public static function addToCart()
+    {
+        if(isset($_GET["id"]) && ModelProduit::getProduitById($_GET["id"])) {
+            if(array_key_exists($_GET["id"], $_SESSION['panier'])) {
+                $_SESSION['panier'][$_GET["id"]]["quantity"] += 1;
+            } else {
+                $_SESSION['panier'] += array($_GET["id"] => array("quantity" => 1));
+            }
+        }
+    }
+
+    public static function removeFromCart()
+    {
+        if(isset($_GET["id"])) {
+            if (array_key_exists($_GET["id"], $_SESSION['panier'])) {
+                unset($_SESSION['panier'][$_GET["id"]]);
+            }
+        }
+    }
+
     public static function readAll()
     {
         $tab_prod = ModelProduit::getAllProduits();  //appel au modèle pour gerer la BD

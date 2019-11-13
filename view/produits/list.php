@@ -4,7 +4,7 @@
         $url_product = "index.php?action=read&controller=ControllerProduit&id=" . $p->getId();
         $url_delete = "index.php?action=delete&controller=ControllerProduit&id=" . $p->getId();
         $url_update = "index.php?action=update&controller=ControllerProduit&id=" . $p->getId();
-        $url_addToCart = "index.php?action=addToCart&controller=ControllerPanier&id=".$p->getId();
+        $url_addToCart = "index.php?action=addToCart&controller=ControllerProduit&id=".$p->getId();
         echo '
     <div class="col s9 m3">
     <div class="card">
