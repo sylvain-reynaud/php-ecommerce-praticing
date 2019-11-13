@@ -1,4 +1,4 @@
-<form method="post" action="index.php?action=<?php echo $type ?>" enctype="multipart/form-data">
+<form method="post" action="index.php?action=<?php echo $type ?>&controller=ControllerProduit" enctype="multipart/form-data">
   	<fieldset>
     <legend> Ajout d'un produit : </legend>
     <p>
@@ -18,6 +18,7 @@
     </p>
     
     <input type='hidden' name='action' value='<?php echo $type ?>'>
+    <input type='hidden' name='id' value='<?php echo $id ?>'>
 
     <p>
       <input type="submit" value="Envoyer" />

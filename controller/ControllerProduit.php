@@ -58,7 +58,7 @@ class ControllerProduit
         $controller = "produits";
         $view = 'create';
         $pagetitle = "Creation d'un produit";
-        $type= 'create';    
+        $type= 'created';    
 
         $id = '';
         $name = '';
@@ -73,7 +73,7 @@ class ControllerProduit
         $controller = "produits";
         $view = 'create';
         $pagetitle = "Modification d'un produit";
-        $type = 'update';
+        $type = 'updated';
 
         $pro = ModelProduit::getProduitById($_GET['id']);
     
