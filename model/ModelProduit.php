@@ -11,6 +11,7 @@ class ModelProduit
     private $prix;
     private $imageUrl;
 
+    /*
     public function __construct($id = NULL, $nom = NULL, $desc = NULL, $prix = NULL, $image = NULL)
     {
         if (!is_null($id) && !is_null($nom) && !is_null($desc) && !is_null($prix)) {
@@ -20,6 +21,17 @@ class ModelProduit
             $this->description = $desc;
             $this->prix = $prix;
             $this->imageUrl = $image;
+        }
+    }
+    */
+
+    public function __construct($data = NULL)
+    {
+        if (!is_null($data) && !empty($data)) {
+
+            foreach ($data as $key=> $value){
+                $this->$key = $value;
+            }
         }
     }
 
@@ -50,6 +62,7 @@ class ModelProduit
     {
         return $this->imageUrl;
     }
+
 
 
 
@@ -86,6 +99,22 @@ class ModelProduit
             return false;
         return $tab_prod[0];
     }
+
+    public static function update($data){
+        $sql = "UPDATE produits SET nomProduit=:nom, description= :desc, prix= :prix WHERE idproduit= :id";
+        // Préparation de la requête
+        $req_prep = Model::$pdo->prepare($sql);
+
+        $values = array(
+            "id" => $data['id'],
+            "nom" => $data['name'],
+            "desc" => $data['desc'],
+            "prix" => $data['price']
+        );
+        // On donne les valeurs et on exécute la requête   
+        $req_prep->execute($values);
+    }
+
     public static function deleteById($id)
     {
         $sql = "DELETE FROM `produits` WHERE idproduit = :id;";

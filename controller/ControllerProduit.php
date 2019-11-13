@@ -60,6 +60,22 @@ class ControllerProduit
         require(File::build_path(array("view", "view.php")));
     }
 
+    public static function update()
+    {
+        $controller = "produits";
+        $view = 'update';
+        $pagetitle = "Modification d'un produit";
+        require(File::build_path(array("view", "view.php")));
+    }
+
+    public static function updated()
+    {
+        ModelProduit::update($_POST);
+        self::readAll();
+
+
+    }
+
     public static function created(){
         {
             $name = $_FILES['fileToUpload']['name'];
@@ -72,11 +88,16 @@ class ControllerProduit
                 $name = "default_image.jpg";
             }
 
-            $view = 'list';
-            $pagetitle = 'Produit ajouté avec succès !';
-            require(File::build_path(array("view", "view.php")));
+            
+            $val = array(
+                "idProduit" => 0,
+                "nomProduit" => $_POST['name'],
+                "description" => $_POST['desc'],
+                "prix" => $_POST['price'],
+                "imageUrl" => $name
+            );
 
-            $prod = new ModelProduit(0, $_POST['name'], $_POST['desc'], $_POST['price'], $name);
+            $prod = new ModelProduit($val);
 
             $saveEx = $prod->save();
 
@@ -86,6 +107,7 @@ class ControllerProduit
                 $pagetitle = 'Erreur !';
                 require(File::build_path(array("view", "view.php")));
             }
+            self::readAll();
         }
     }
 }
