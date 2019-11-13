@@ -59,6 +59,15 @@ class ControllerProduit
         require(File::build_path(array("view", "view.php")));  //"redirige" vers la vue
     }
 
+    public static function randomId($idQuOnNeVeutPas)
+    {
+        $tab_prod = ModelProduit::getAllProduits();
+        do {
+            $r = $tab_prod[array_rand($tab_prod)];
+        } while($r->getId() == $idQuOnNeVeutPas);
+        return $r->getId();
+    }
+
     public static function read()
     {
         $id = $_GET['id'];
@@ -72,6 +81,16 @@ class ControllerProduit
         } else {
             $view = 'detail';
             $pagetitle = 'Détails';
+            if(isset($_COOKIE["lastProductSeen"]) and $_COOKIE["lastProductSeen"] != $id) {
+                $titreLast = "Dernier produit vu :";
+                $lastProductSeen = ModelProduit::getProduitById($_COOKIE["lastProductSeen"]);
+            }
+            else {
+                // Affiche un autre produit aléatoire
+                $titreLast = "Ce produit pourrait vous plaire :";
+                $lastProductSeen = ModelProduit::getProduitById(ControllerProduit::randomId($id));
+            }
+            setcookie("lastProductSeen", $id, time()+3600); // 1h
             require(File::build_path(array("view", "view.php")));
         }
     }
