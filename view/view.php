@@ -20,7 +20,7 @@
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="index.php?action=readAll">Voir toutes les voitures</a></li>
                 <li><a href="index.php?action=readAll&controller=utilisateur">Utilisateurs</a></li>
-                <li><a href="index.php?action=readAll&controller=trajet">Trajets</a></li>
+                <li><a href="index.php?action=readAll&controller=panier">Panier : <?php echo count($_SESSION['panier']) ?> produits</a></li>
             </ul>
         </div>
     </nav>

@@ -29,7 +29,7 @@ class ModelProduit
     {
         if (!is_null($data) && !empty($data)) {
 
-            foreach ($data as $key=> $value){
+            foreach ($data as $key => $value) {
                 $this->$key = $value;
             }
         }
@@ -64,8 +64,6 @@ class ModelProduit
     }
 
 
-
-
     public static function getAllProduits()
     {
 
@@ -88,7 +86,7 @@ class ModelProduit
             "nom_tag" => $id,
             //nomdutag => valeur, ...
         );
-        // On donne les valeurs et on exécute la requête   
+        // On donne les valeurs et on exécute la requête
         $req_prep->execute($values);
 
         // On récupère les résultats comme précédemment
@@ -100,7 +98,8 @@ class ModelProduit
         return $tab_prod[0];
     }
 
-    public static function update($data){
+    public static function update($data)
+    {
         $sql = "UPDATE produits SET nomProduit=:nom, description= :desc, prix= :prix WHERE idproduit= :id";
         // Préparation de la requête
         $req_prep = Model::$pdo->prepare($sql);
@@ -111,7 +110,7 @@ class ModelProduit
             "desc" => $data['desc'],
             "prix" => $data['price']
         );
-        // On donne les valeurs et on exécute la requête   
+        // On donne les valeurs et on exécute la requête
         $req_prep->execute($values);
     }
 
@@ -154,4 +153,5 @@ class ModelProduit
         return true;
     }
 }
+
 ?>

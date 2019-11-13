@@ -2,11 +2,12 @@
 
 require_once File::build_path(array("controller","ControllerProduit.php"));
 
-if(isset($_GET['action'])){
+if(isset($_GET['action']) && isset($_GET['controller'])){
     $action = $_GET['action'];
-    $availableActions = get_class_methods("ControllerProduit");
+    $controller = $_GET['controller'];
+    $availableActions = get_class_methods($controller);
     if (in_array($action, $availableActions)) {
-        ControllerProduit::$action();
+        $controller::$action();
     }
     else {
         ControllerProduit::showError();
