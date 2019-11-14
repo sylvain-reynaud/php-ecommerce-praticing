@@ -81,7 +81,9 @@ class ControllerProduit
         } else {
             $view = 'detail';
             $pagetitle = 'Détails';
-            if(isset($_COOKIE["lastProductSeen"]) and $_COOKIE["lastProductSeen"] != $id) {
+            if(isset($_COOKIE["lastProductSeen"]) and
+                $_COOKIE["lastProductSeen"] != $id and
+                ModelProduit::getProduitById($_COOKIE["lastProductSeen"])) {
                 $titreLast = "Dernier produit vu :";
                 $lastProductSeen = ModelProduit::getProduitById($_COOKIE["lastProductSeen"]);
             }
