@@ -19,8 +19,11 @@
             <a href="#" class="brand-logo">Logo</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="index.php?action=readAll">Voir tous les produits</a></li>
-                <li><a href="index.php?action=readAll&controller=utilisateur">Utilisateurs</a></li>
+                <li><a href="index.php?action=readAll&controller=ControllerProduit">Utilisateurs</a></li>
                 <li><a href="index.php?action=readCart&controller=ControllerProduit">Panier : <?php echo ControllerProduit::countProductsInCart(); ?> produits</a></li>
+                
+                <li><a href="index.php?action=create&controller=ControllerUtilisateur">Créer un compte</a></li>
+                <li><a href="index.php?action=connect&controller=ControllerUtilisateur">Se connecter</a></li>
             </ul>
         </div>
     </nav>

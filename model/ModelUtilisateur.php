@@ -57,6 +57,31 @@
             return $tab_prod[0];
         }
 
+        public static function checkPassword($pseudo, $mdpChiffrer){
+            $sql = "SELECT * FROM user WHERE pseudo=:pseudo AND mdp=:pass";
+
+            $req_prep = Model::$pdo->prepare($sql);
+
+            $values = array(
+                "pseudo" => $pseudo,
+                "pass" => $mdpChiffrer
+            );
+
+            $req_prep->execute($values);
+
+            $req_prep->setFetchMode(PDO::FETCH_CLASS, "ModelUtilisateur");
+            $tab = $req_prep->fetchAll();
+
+            var_dump($tab);
+            if(empty($tab)){
+                return false;
+            }else{
+                return true;
+            }
+
+
+        }
+
 
         public function save()
         {
