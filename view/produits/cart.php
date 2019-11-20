@@ -1,11 +1,12 @@
 <ul class="collection">
 <?php
+    global $CSRF_NAME;
     foreach ($tab_prod as $id => $data) {
         $p = $data["obj"];
         $quantity = $data["quantity"];
 
         $url_product = "index.php?action=read&controller=ControllerProduit&id=" . $p->getId();
-        $url_removeOfCart = "index.php?action=removeFromCart&controller=ControllerProduit&id=" . $p->getId();
+        $url_removeOfCart = "index.php?action=removeFromCart&controller=ControllerProduit&id=" . $p->getId()."&csrf_token=$_SESSION[$CSRF_NAME]";
         $url_addToCart = "index.php?action=addToCart&controller=ControllerProduit&id=".$p->getId();
         echo '
             <div class="col s9 m3">

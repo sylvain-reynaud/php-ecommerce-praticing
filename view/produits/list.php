@@ -1,10 +1,11 @@
 <div class="row">
 <?php
+    global $CSRF_NAME;
     foreach ($tab_prod as $p) {
         $url_product = "index.php?action=read&controller=ControllerProduit&id=" . $p->getId();
-        $url_delete = "index.php?action=delete&controller=ControllerProduit&id=" . $p->getId();
+        $url_delete = "index.php?action=delete&controller=ControllerProduit&id=" . $p->getId()."&csrf_token=$_SESSION[$CSRF_NAME]";
         $url_update = "index.php?action=update&controller=ControllerProduit&id=" . $p->getId();
-        $url_addToCart = "index.php?action=addToCart&controller=ControllerProduit&id=".$p->getId();
+        $url_addToCart = "index.php?action=addToCart&controller=ControllerProduit&id=".$p->getId()."&csrf_token=$_SESSION[$CSRF_NAME]";
         echo '
     <div class="col s9 m3">
     <div class="card">

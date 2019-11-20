@@ -2,8 +2,17 @@
 
 require_once File::build_path(array("model", "ModelProduit.php"));
 
+
 class ControllerProduit
 {
+
+    private static function csrfCheck() {
+        global $CSRF_NAME;
+        if (isset($_SESSION[$CSRF_NAME]) AND isset($_GET[$CSRF_NAME]) AND
+            !empty($_SESSION[$CSRF_NAME]) AND !empty($_GET[$CSRF_NAME])) {
+            return $_SESSION[$CSRF_NAME] == $_GET[$CSRF_NAME];
+        }
+    }
 
     public static function readCart()
     {
@@ -30,24 +39,32 @@ class ControllerProduit
 
     public static function addToCart()
     {
-        if(isset($_GET["id"]) && ModelProduit::getProduitById($_GET["id"])) {
-            if(array_key_exists($_GET["id"], $_SESSION['panier'])) {
-                $_SESSION['panier'][$_GET["id"]]["quantity"] += 1;
-            } else {
-                $_SESSION['panier'] += array($_GET["id"] => array("quantity" => 1));
-            }
+        if (self::csrfCheck()){
+                if (isset($_GET["id"]) && ModelProduit::getProduitById($_GET["id"])) {
+                    if (array_key_exists($_GET["id"], $_SESSION['panier'])) {
+                        $_SESSION['panier'][$_GET["id"]]["quantity"] += 1;
+                    } else {
+                        $_SESSION['panier'] += array($_GET["id"] => array("quantity" => 1));
+                    }
+                }
+                self::readAll();
         }
-        self::readAll();
+        else {
+            // pas de token csrf
+            echo "Erreur de vérification !";
+        }
     }
 
     public static function removeFromCart()
     {
-        if(isset($_GET["id"])) {
-            if (array_key_exists($_GET["id"], $_SESSION['panier'])) {
-                unset($_SESSION['panier'][$_GET["id"]]);
+        if (self::csrfCheck()) {
+            if (isset($_GET["id"])) {
+                if (array_key_exists($_GET["id"], $_SESSION['panier'])) {
+                    unset($_SESSION['panier'][$_GET["id"]]);
+                }
             }
+            self::readCart();
         }
-        self::readCart();
     }
 
     public static function readAll()
@@ -107,16 +124,18 @@ class ControllerProduit
 
     public static function delete()
     {
-        $id = $_GET['id'];
-        $v = ModelProduit::deleteById($id);
-        $controller = 'produits';
-        if (!$v) {
-            $controller = "";
-            $view = 'error';
-            $pagetitle = 'Erreur !';
-            require(File::build_path(array("view", "view.php")));
+        if (self::csrfCheck()) {
+            $id = $_GET['id'];
+            $v = ModelProduit::deleteById($id);
+            $controller = 'produits';
+            if (!$v) {
+                $controller = "";
+                $view = 'error';
+                $pagetitle = 'Erreur !';
+                require(File::build_path(array("view", "view.php")));
+            }
+            self::readAll();
         }
-        self::readAll();
     }
 
     public static function create()
@@ -161,36 +180,38 @@ class ControllerProduit
 
     public static function created(){
         {
-            $name = $_FILES['fileToUpload']['name'];
-            $pic_path = "images/$name";
+            if (self::csrfCheck()) {
+                $name = $_FILES['fileToUpload']['name'];
+                $pic_path = "images/$name";
 
-            if (is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
-                $controller = "produits";
+                if (is_uploaded_file($_FILES['fileToUpload']['tmp_name'])) {
+                    $controller = "produits";
+                }
+                if (!move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $pic_path)) {
+                    $name = "default_image.jpg";
+                }
+
+
+                $val = array(
+                    "idProduit" => 0,
+                    "nomProduit" => $_POST['name'],
+                    "description" => $_POST['desc'],
+                    "prix" => $_POST['price'],
+                    "imageUrl" => $name
+                );
+
+                $prod = new ModelProduit($val);
+
+                $saveEx = $prod->save();
+
+                if ($saveEx == false) {
+                    $controller = "";
+                    $view = 'error';
+                    $pagetitle = 'Erreur !';
+                    require(File::build_path(array("view", "view.php")));
+                }
+                self::readAll();
             }
-            if (!move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $pic_path)) {
-                $name = "default_image.jpg";
-            }
-
-            
-            $val = array(
-                "idProduit" => 0,
-                "nomProduit" => $_POST['name'],
-                "description" => $_POST['desc'],
-                "prix" => $_POST['price'],
-                "imageUrl" => $name
-            );
-
-            $prod = new ModelProduit($val);
-
-            $saveEx = $prod->save();
-
-            if ($saveEx == false) {
-                $controller = "";
-                $view = 'error';
-                $pagetitle = 'Erreur !';
-                require(File::build_path(array("view", "view.php")));
-            }
-            self::readAll();
         }
     }
 }

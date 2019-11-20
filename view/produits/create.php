@@ -3,6 +3,7 @@
     <legend> Ajout d'un produit : </legend>
     <p>
     <label for="name">Nom du produit :</label>
+            <input type="hidden" name="token_csrf" id="token_csrf" value="<?php global $CSRF_NAME; echo $_SESSION[$CSRF_NAME]; ?>" />
             <input type="text" value="<?php echo $name ?>" placeholder="Ex : t-shirt" name="name" id="name" required />
             <br>
             <label for="desc">Description :</label>
