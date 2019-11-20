@@ -19,10 +19,15 @@
             </div>
             <div class="card-action">
             <a href="' . $url_product . '">' . htmlspecialchars($p->getPrice()) . '€</a>
+            ';
+            if($_SESSION['admin']=='true'){
+                echo '
+                <a href="' . $url_update . '">Modifier</a>
+                <a href="' . $url_delete . '">Supprimer</a>';
+            }
             
-            
-            <a href="' . $url_update . '">Modifier</a>
-            <a href="' . $url_delete . '">Supprimer</a>
+
+            echo '
 </div>
 </div>
         </div>' . "\n";

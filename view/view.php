@@ -1,3 +1,4 @@
+<?php  var_dump($_SESSION) ?>
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -22,8 +23,20 @@
                 <li><a href="index.php?action=readAll&controller=ControllerProduit">Utilisateurs</a></li>
                 <li><a href="index.php?action=readCart&controller=ControllerProduit">Panier : <?php echo ControllerProduit::countProductsInCart(); ?> produits</a></li>
                 
-                <li><a href="index.php?action=create&controller=ControllerUtilisateur">Créer un compte</a></li>
-                <li><a href="index.php?action=connect&controller=ControllerUtilisateur">Se connecter</a></li>
+                <?php 
+
+                if($_SESSION['logged']=='false'){
+                    echo <<<EOF
+                    <li><a href="index.php?action=create&controller=ControllerUtilisateur">Créer un compte</a></li>
+                    <li><a href="index.php?action=connect&controller=ControllerUtilisateur">Se connecter</a></li>
+EOF;
+                }else{
+                    echo <<<OEF
+                    <li><a href="index.php?action=disconnect&controller=ControllerUtilisateur">Deconnexion</a></li>
+OEF;
+                }
+
+                ?>
             </ul>
         </div>
     </nav>

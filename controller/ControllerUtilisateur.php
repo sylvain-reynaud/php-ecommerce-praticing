@@ -29,6 +29,12 @@
             require(File::build_path(array("view", "view.php")));
         }
 
+        public static function disconnect(){
+            session_unset();
+            session_destroy();
+            setcookie(session_name(),'', time()-1);
+        }
+
         public static function connected(){
             $controller="produits";
             $view="list";
@@ -38,6 +44,14 @@
             $password = Security::chiffrer($_POST['password']);
 
             if(ModelUtilisateur::checkPassword($pseudo, $password)){
+                $_SESSION['logged'] = 'true';
+                $_SESSION['login'] = $pseudo;
+
+                $user = ModelUtilisateur::getUserByPseudo($pseudo);
+                $admin = $user->getIsAdmin();
+                if($admin){
+                    $_SESSION['admin'] = 'true';
+                }
                 ControllerProduit::readAll();
             }else{
                 self::connect();
