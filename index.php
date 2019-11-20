@@ -16,6 +16,16 @@ if(!isset($_SESSION['panier'])) {
     $_SESSION['panier'] = array();
 }
 
+if(!isset($_SESSION['logged'])) {
+    $_SESSION['logged'] = 'false';
+}
+if(!isset($_SESSION['login'])) {
+    $_SESSION['login'] = '';
+}
+if(!isset($_SESSION['admin'])) {
+    $_SESSION['admin'] = 'false';
+}
+
 require File::build_path(array("controller","routeur.php"));
 
 ?>
