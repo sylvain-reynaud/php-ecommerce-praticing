@@ -124,7 +124,8 @@ class ControllerProduit
 
     public static function delete()
     {
-        if (self::csrfCheck()) {
+
+        if (self::csrfCheck() && $_SESSION['admin'] == 'true') {
             $id = $_GET['id'];
             $v = ModelProduit::deleteById($id);
             $controller = 'produits';
@@ -135,52 +136,69 @@ class ControllerProduit
                 require(File::build_path(array("view", "view.php")));
             }
             self::readAll();
+        }else{
+            self::showError();
         }
     }
 
     public static function create()
     {
-        $controller = "produits";
-        $view = 'create';
-        $pagetitle = "Creation d'un produit";
-        $type= 'created';    
+        if($_SESSION['admin']=='true'){
+            $controller = "produits";
+            $view = 'create';
+            $pagetitle = "Creation d'un produit";
+            $type= 'created';
 
-        $id = '';
-        $name = '';
-        $desc = '';
-        $prix = '';
+            $id = '';
+            $name = '';
+            $desc = '';
+            $prix = '';
 
-        require(File::build_path(array("view", "view.php")));
+            require(File::build_path(array("view", "view.php")));
+        }else{
+            self::showError();
+        }
     }
 
     public static function update()
     {
-        $controller = "produits";
-        $view = 'create';
-        $pagetitle = "Modification d'un produit";
-        $type = 'updated';
 
-        $pro = ModelProduit::getProduitById($_GET['id']);
-    
 
-        $id = $pro->getId();
-        $name = $pro->getName();
-        $desc = $pro->getDesc();
-        $prix = $pro->getPrice();
-        require(File::build_path(array("view", "view.php")));
+        if ($_SESSION['admin'] == 'true'){
+
+            $controller = "produits";
+            $view = 'create';
+            $pagetitle = "Modification d'un produit";
+            $type = 'updated';
+
+            $pro = ModelProduit::getProduitById($_GET['id']);
+
+
+            $id = $pro->getId();
+            $name = $pro->getName();
+            $desc = $pro->getDesc();
+            $prix = $pro->getPrice();
+            require(File::build_path(array("view", "view.php")));
+        }else{
+            self::showError();
+        }
     }
 
     public static function updated()
     {
-        ModelProduit::update($_POST);
-        self::readAll();
+        if($_SESSION['admin']=='true'){
+            ModelProduit::update($_POST);
+            self::readAll();
+        }else{
+            self::showError();
+        }
 
 
     }
 
     public static function created(){
         {
-            if (self::csrfCheck()) {
+            if (self::csrfCheck() && $_SESSION['admin']=='true') {
                 $name = $_FILES['fileToUpload']['name'];
                 $pic_path = "images/$name";
 
@@ -211,6 +229,8 @@ class ControllerProduit
                     require(File::build_path(array("view", "view.php")));
                 }
                 self::readAll();
+            }else{
+                self::showError();
             }
         }
     }
