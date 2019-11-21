@@ -17,6 +17,9 @@
             $email = '';
             $password = '';
             $mdp = '';
+            if(!isset($erreur)){
+                $erreur='';
+            }
     
             require(File::build_path(array("view", "view.php")));
         }
@@ -70,6 +73,13 @@
         }
 
         public static function created(){
+
+            if(($_POST['password'])!= ($_POST['verifpassword'])){
+                $erreur="Entrez des mots de passes identiques";
+                self::create();
+            }else{
+
+
             $val = array(
                 "pseudo" => $_POST['pseudo'],
                 "email" => $_POST['email'],
@@ -85,9 +95,12 @@
                 $view = 'error';
                 $pagetitle = 'Erreur !';
                 require(File::build_path(array("view", "view.php")));
+            }else{
+
+                ControllerProduit::readAll();
             }
 
         }
-
+        }
     }
 ?>

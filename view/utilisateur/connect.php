@@ -1,6 +1,6 @@
 <form method="POST" action="index.php?action=connected&controller=ControllerUtilisateur" enctype="multipart/form-data">
   	<fieldset>
-    <legend> Connection : </legend>
+    <legend> Connexion : </legend>
     <p>
     <label for="pseudo">Pseudo :</label>
             <input type="text" placeholder="Ex : TotoDu34" name="pseudo" id="pseudo" required />

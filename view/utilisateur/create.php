@@ -15,7 +15,8 @@
             <label for="verifpassword">Retapez votre mdp</label>
             <input type="password" value="" placeholder="Ex : " name="verifpassword" id="verifpassword" required />
             <br>
-    
+            <p style="color: red"><?php echo $erreur ?></p>
+
     <input type='hidden' name='action' value='<?php echo $type ?>'>
     <input type='hidden' name='isAdmin' value='false'>
 
