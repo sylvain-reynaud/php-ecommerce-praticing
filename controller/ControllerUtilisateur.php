@@ -33,6 +33,17 @@
             session_unset();
             session_destroy();
             setcookie(session_name(),'', time()-1);
+
+            $CSRF_TOKEN = uniqid();
+            $CSRF_NAME = "csrf_token";
+            $CSRF_TOKEN = uniqid();
+            $_SESSION[$CSRF_NAME] = $CSRF_TOKEN;
+            $_SESSION['panier'] = array();
+            $_SESSION['logged'] = 'false';
+            $_SESSION['login'] = '';
+            $_SESSION['admin'] = 'false';
+
+            ControllerProduit::readAll();
         }
 
         public static function connected(){
