@@ -7,11 +7,11 @@
         private $email;
         private $mdp;
         private $isAdmin;
+        private $nonce;
 
         public function __construct($data = NULL)
         {
             if (!is_null($data) && !empty($data)) {
-    
                 foreach ($data as $key => $value) {
                     $this->$key = $value;
                 }
@@ -20,6 +20,10 @@
 
         public function getPseudo(){
             return $this->pseudo;
+        }
+
+        public function getNonce(){
+            return $this->nonce;
         }
 
         public function getEmail(){
@@ -31,6 +35,18 @@
         }
         public function getIsAdmin(){
             return $this->isAdmin;
+        }
+        public function setNonceNull(){
+            $this->nonce = 'NULL';
+            $sql = "UPDATE user SET nonce='NULL' where pseudo=:pseudo";
+
+            $req_prep = Model::$pdo->prepare($sql);
+            $values = array(
+                "pseudo" => $this->pseudo
+            );
+
+            $req_prep->execute($values);
+
         }
 
 
@@ -85,14 +101,15 @@
 
         public function save()
         {
-            $sql = "INSERT INTO `user` (`pseudo`, `email`, `mdp`, `isAdmin`) VALUES (:pseudo, :email, :mdp, :isAdmin);";
+            $sql = "INSERT INTO `user` (`pseudo`, `email`, `mdp`, `isAdmin`,`nonce`) VALUES (:pseudo, :email, :mdp, :isAdmin,:nonce);";
             try {
                 $req_prep = Model::$pdo->prepare($sql);
                 $values = array(
                     "pseudo" => $this->pseudo,
                     "email" => $this->email,
                     "mdp" => $this->mdp,
-                    "isAdmin" => $this->isAdmin
+                    "isAdmin" => $this->isAdmin,
+                    "nonce" => $this->nonce
                 );
     
                 $req_prep->execute($values);
