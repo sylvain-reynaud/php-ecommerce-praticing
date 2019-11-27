@@ -16,7 +16,7 @@
         <input type='hidden' name='action' value='<?php echo $type ?>'>
 
         <p>
-            <input type="submit" value="Confirmer mes informations" />
+            <input type="submit" value="Confirmer mes informations et la commande" />
         </p>
     </fieldset>
 </form>
