@@ -1,4 +1,4 @@
-<form method="post" action="index.php?action=<?php echo $type ?>&controller=ControllerProduit" enctype="multipart/form-data">
+<form method="post" action="index.php?action=created" enctype="multipart/form-data">
   	<fieldset>
     <legend> Ajout d'un produit : </legend>
     <p>
