@@ -7,6 +7,9 @@
         private $email;
         private $mdp;
         private $isAdmin;
+        private $name;
+        private $rue;
+        private $postalCode;
 
         public function __construct($data = NULL)
         {
@@ -31,6 +34,15 @@
         }
         public function getIsAdmin(){
             return $this->isAdmin;
+        }
+        public function getName(){
+            return $this->name;
+        }
+        public function getRue(){
+            return $this->rue;
+        }
+        public function getPostalCode(){
+            return $this->postalCode;
         }
 
 
@@ -102,6 +114,22 @@
                 }
             }
             return true;
+        }
+
+        public static function saveDeliveryInfo($data)
+        {
+            $sql = "UPDATE user SET name=:name, rue=:rue, postalCode=:postalCode WHERE pseudo=:pseudo";
+            // Préparation de la requête
+            $req_prep = Model::$pdo->prepare($sql);
+
+            $values = array(
+                "name" => $data['name'],
+                "rue" => $data['rue'],
+                "postalCode" => $data['postalCode'],
+                "pseudo" => $_SESSION['login']
+            );
+            // On donne les valeurs et on exécute la requête
+            $req_prep->execute($values);
         }
     }
 ?>

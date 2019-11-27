@@ -23,3 +23,6 @@
     }
     ?>
 </ul>
+<button class="btn waves-effect waves-light" type="submit" onclick="document.location.href='index.php?action=deliveryInfo&controller=ControllerUtilisateur'">Commander
+    <i class="material-icons right">send</i>
+</button>

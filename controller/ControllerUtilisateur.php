@@ -11,7 +11,7 @@
             $controller = "utilisateur";
             $view = 'create';
             $pagetitle = "Creation d'un utilisateur";
-            $type= 'created';    
+            $type = 'created';
     
             $pseudo = '';
             $email = '';
@@ -102,5 +102,42 @@
 
         }
         }
+
+        public static function deliveryInfo() {
+            if (json_decode($_SESSION['logged'])) { // 'false' est une str -> utilisation de json_decode
+                $controller = "utilisateur";
+                $view = "deliveryInfo";
+                $pagetitle = "Détails de la livraison";
+                $type = "updateDeliveryInfo";
+
+                $user = ModelUtilisateur::getUserByPseudo($_SESSION['login']);
+
+                $name = $user->getName();
+                $rue = $user->getRue();
+                $postalCode = $user->getPostalCode();
+                $erreur = '';
+
+                require(File::build_path(array("view", "view.php")));
+            }
+            else {
+                ControllerUtilisateur::connect();
+            }
+    }
+
+    public static function updateDeliveryInfo() {
+        ModelUtilisateur::saveDeliveryInfo($_POST);
+
+        ControllerProduit::readAll();
+    }
+
+        public static function readAllOrders()
+        {
+            $tab_prod = ModelUtilisateur::getAllOrders();  //appel au modèle pour gerer la BD
+            $controller = 'utilisateur';
+            $view = 'list';
+            $pagetitle = 'Liste des commandes passées';
+            require(File::build_path(array("view", "view.php")));  //"redirige" vers la vue
+        }
+
     }
 ?>
