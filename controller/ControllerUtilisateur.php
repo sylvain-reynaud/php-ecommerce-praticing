@@ -1,7 +1,9 @@
 <?php
 
 require_once File::build_path(array("model", "ModelUtilisateur.php"));
+require_once File::build_path(array("model", "ModelCommande.php"));
 require_once File::build_path(array("controller", "ControllerProduit.php"));
+require_once File::build_path(array("controller", "ControllerCommande.php"));
 
 require_once File::build_path(array("lib", "Security.php"));
 
@@ -158,8 +160,12 @@ class ControllerUtilisateur
     public static function updateDeliveryInfo()
     {
         ModelUtilisateur::saveDeliveryInfo($_POST);
-
+        $commande = new ModelCommande(array("idUser" => $_SESSION["login"],
+        "produits" => $_SESSION["panier"]));
+        $commande->save();
+        $_SESSION['panier'] = array();
         // TODO : redirection vers historique commande (readall) + msg "commande confirmée"
+        ControllerCommande::readAllOfUser($_SESSION["login"]);
     }
 
     public static function readAllOrders()

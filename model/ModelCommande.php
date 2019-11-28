@@ -7,7 +7,7 @@ class ModelCommande
 
     private $idCommande;
     private $idUser;
-    private $produits;
+    private $produits; // comme le panier
 
     public function __construct($data = NULL)
     {
@@ -32,6 +32,27 @@ class ModelCommande
     public function getProduits()
     {
         return $this->produits;
+    }
+
+    public static function getAllOrdersOfUser($userId)
+    {
+        $sql = "SELECT * FROM commandes WHERE idUser=:userId";
+        // Préparation de la requête
+        $req_prep = Model::$pdo->prepare($sql);
+
+        $values = array(
+            "userId" => $userId,
+        );
+        // On donne les valeurs et on exécute la requête
+        $req_prep->execute($values);
+
+        // On récupère les résultats comme précédemment
+        $req_prep->setFetchMode(PDO::FETCH_CLASS, 'ModelCommande');
+        $tab = $req_prep->fetchAll();
+        // Attention, si il n'y a pas de résultats, on renvoie false
+        if (empty($tab))
+            return false;
+        return $tab;
     }
 
     public static function getProductsFromOrder($id)
@@ -81,7 +102,7 @@ class ModelCommande
 
     public function save()
     {
-        $sql = "INSERT INTO `commandes` (`idUser`) VALUES (:pseudo);";
+        $sql = "INSERT INTO `commandes` (`idUser`) VALUES (:idUser);";
         try {
             $req_prep = Model::$pdo->prepare($sql);
             $values = array(
@@ -95,14 +116,16 @@ class ModelCommande
             }
         }
 
-        foreach ($this->produits as $p) {
+        $lastId = Model::$pdo->lastInsertId();
+
+        foreach ($this->produits as $productId => $productArr) {
             $sql = "INSERT INTO `produitsCommandes` (`idCommande`, `idProduit`, `quantite`) VALUES (:idCommande, :idProduit, :quantite);";
             try {
                 $req_prep = Model::$pdo->prepare($sql);
                 $values = array(
-                    "idCommande" => Model::$pdo->lastInsertId(),
-                    "idProduit" => $p["obj"]->getId(),
-                    "quantite" => $p["quantity"],
+                    "idCommande" => intval($lastId),
+                    "idProduit" => $productId,
+                    "quantite" => $productArr["quantity"],
                 );
 
                 $req_prep->execute($values);
