@@ -27,6 +27,98 @@ require_once File::build_path(array("config","Conf.php"));
 			}
 		}
 
-	}
+		public static function selectAll(){
+			$table_name = static::$objet;
+			$class_name ="Model".ucfirst($table_name);
+			$sql = "SELECT * FROM  $table_name";
+			$rep = Model::$pdo->query($sql);
+			$rep->setFetchMode(PDO::FETCH_CLASS, $class_name);
+			$tab_prod = $rep->fetchAll();
+	
+			return $tab_prod;
+		}
+
+		public static function select($primary_value) {
+			$table_name = static::$objet;
+			$class_name ="Model".ucfirst($table_name);
+			$primary_key = static::$primary;
+			$sql = "SELECT * from $table_name WHERE $primary_key = :nom_tag";
+			// Préparation de la requête
+			$req_prep = Model::$pdo->prepare($sql);
+	
+			$values = array(
+				"nom_tag" => $primary_value,
+				//nomdutag => valeur, ...
+			);
+			// On donne les valeurs et on exécute la requête
+			$req_prep->execute($values);
+	
+			// On récupère les résultats comme précédemment
+			$req_prep->setFetchMode(PDO::FETCH_CLASS, $class_name);
+			$tab = $req_prep->fetchAll();
+			// Attention, si il n'y a pas de résultats, on renvoie false
+			if (empty($tab))
+				return false;
+			return $tab[0];
+		}
+
+		public static function delete($primary){
+			$table_name = static::$objet;
+			$primary_key = static::$primary;
+			$class_name ="Model".ucfirst($table_name);
+			$sql = "DELETE FROM $table_name WHERE $primary_key =:nom_tag";
+			$req_prep = Model::$pdo->prepare($sql);
+			$values = array(
+				"nom_tag" => $primary,
+			);
+			$req_prep->execute($values);
+		}
+
+		public  static function update($data){
+			$table_name = static::$objet;
+			$primary_key = static::$primary;
+	
+			$set  = "";
+			foreach ($data as $key=>$value){
+				if ($key != $primary_key){
+					$set = $set . "$key=:$key,";
+				}
+			}
+			$set=rtrim($set ,"\t,");
+
+			var_dump($set);
+			$sql = "UPDATE $table_name SET $set WHERE $primary_key =:$primary_key";
+			var_dump($sql);
+			$req_prep = Model::$pdo->prepare($sql);
+			$req_prep->execute($data);
+	
+		}
+
+		public static function save($data){
+			try{
+			$table_name = static::$objet;
+			$primary_key = static::$primary;
+			$attribut  = "";
+			$val= "";
+			foreach ($data as $key=>$value){
+				$attribut = $attribut."$key," ;
+				$val = $val."'$value'," ;
+			}
+			$attribut=rtrim($attribut ,"\t,");
+			$val = rtrim($val ,"\t,");
+			$sql = "INSERT INTO $table_name ($attribut) VALUES ($val)";
+			var_dump($sql);
+			
+			$req_prep = Model::$pdo->prepare($sql);
+			$req_prep->execute($data);
+		} catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                return false;
+            }
+        }
+        return true;
+		}
+}
+	
 	Model::Init();
 ?>

@@ -2,12 +2,16 @@
 
 require_once File::build_path(array("model", "Model.php"));
 
-class ModelCommande
+class ModelCommande extends Model
 {
 
     private $idCommande;
     private $idUser;
     private $produits; // comme le panier
+
+    protected static $primary='idCommande';
+    
+    protected static $objet = "commandes";
 
     public function __construct($data = NULL)
     {
@@ -98,7 +102,7 @@ class ModelCommande
             return false;
         return $tab_prod[0];
     }
-
+/*
 
     public function save()
     {
@@ -137,7 +141,7 @@ class ModelCommande
         }
 
         return true;
-    }
+    }*/
 }
 
 ?>

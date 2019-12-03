@@ -19,7 +19,7 @@ class ControllerProduit
         $tab_prod = $_SESSION['panier'];
 
         foreach ($tab_prod as $id => $quantity) {
-            $tab_prod[$id] += array("obj" => ModelProduit::getProduitById($id));
+            $tab_prod[$id] += array("obj" => ModelProduit::select($id));
         }
         $controller = 'produits';
         $view = 'cart';
@@ -40,7 +40,7 @@ class ControllerProduit
     public static function addToCart()
     {
         if (self::csrfCheck()){
-                if (isset($_GET["id"]) && ModelProduit::getProduitById($_GET["id"])) {
+                if (isset($_GET["id"]) && ModelProduit::select($_GET["id"])) {
                     if (array_key_exists($_GET["id"], $_SESSION['panier'])) {
                         $_SESSION['panier'][$_GET["id"]]["quantity"] += 1;
                     } else {
@@ -69,7 +69,7 @@ class ControllerProduit
 
     public static function readAll()
     {
-        $tab_prod = ModelProduit::getAllProduits();  //appel au modèle pour gerer la BD
+        $tab_prod = ModelProduit::selectAll();  //appel au modèle pour gerer la BD
         $controller = 'produits';
         $view = 'list';
         $pagetitle = 'Liste des produits';
@@ -78,7 +78,7 @@ class ControllerProduit
 
     public static function randomId($idQuOnNeVeutPas)
     {
-        $tab_prod = ModelProduit::getAllProduits();
+        $tab_prod = ModelProduit::selectAll();
         do {
             $r = $tab_prod[array_rand($tab_prod)];
         } while($r->getId() == $idQuOnNeVeutPas);
@@ -88,7 +88,7 @@ class ControllerProduit
     public static function read()
     {
         $id = $_GET['id'];
-        $p = ModelProduit::getProduitById($id);     //appel au modèle pour gerer la BD
+        $p = ModelProduit::select($id);     //appel au modèle pour gerer la BD
         $controller = 'produits';
         if (!$p) {
             $controller = '';
@@ -100,14 +100,14 @@ class ControllerProduit
             $pagetitle = 'Détails';
             if(isset($_COOKIE["lastProductSeen"]) and
                 $_COOKIE["lastProductSeen"] != $id and
-                ModelProduit::getProduitById($_COOKIE["lastProductSeen"])) {
+                ModelProduit::select($_COOKIE["lastProductSeen"])) {
                 $titreLast = "Dernier produit vu :";
-                $lastProductSeen = ModelProduit::getProduitById($_COOKIE["lastProductSeen"]);
+                $lastProductSeen = ModelProduit::select($_COOKIE["lastProductSeen"]);
             }
             else {
                 // Affiche un autre produit aléatoire
                 $titreLast = "Ce produit pourrait vous plaire :";
-                $lastProductSeen = ModelProduit::getProduitById(ControllerProduit::randomId($id));
+                $lastProductSeen = ModelProduit::select(ControllerProduit::randomId($id));
             }
             setcookie("lastProductSeen", $id, time()+3600); // 1h
             require(File::build_path(array("view", "view.php")));
@@ -127,7 +127,7 @@ class ControllerProduit
 
         if (self::csrfCheck() && $_SESSION['admin'] == 'true') {
             $id = $_GET['id'];
-            $v = ModelProduit::deleteById($id);
+            $v = ModelProduit::delete($id);
             $controller = 'produits';
             if (!$v) {
                 $controller = "";
@@ -171,7 +171,7 @@ class ControllerProduit
             $pagetitle = "Modification d'un produit";
             $type = 'updated';
 
-            $pro = ModelProduit::getProduitById($_GET['id']);
+            $pro = ModelProduit::select($_GET['id']);
 
 
             $id = $pro->getId();
@@ -187,7 +187,15 @@ class ControllerProduit
     public static function updated()
     {
         if($_SESSION['admin']=='true'){
-            ModelProduit::update($_POST);
+
+            $values = array(
+                "idProduit" => $_POST['idProduit'],
+                "nomProduit" => $_POST['nomProduit'],
+                "description" => $_POST['description'],
+                "prix" => $_POST['prix']
+            );
+
+            ModelProduit::update($values);
             self::readAll();
         }else{
             self::showError();
@@ -198,7 +206,7 @@ class ControllerProduit
 
     public static function created(){
         {
-            if (self::csrfCheck() && $_SESSION['admin']=='true') {
+            if (/*self::csrfCheck() && */$_SESSION['admin']=='true') {
                 $name = $_FILES['fileToUpload']['name'];
                 $pic_path = "images/$name";
 
@@ -211,16 +219,16 @@ class ControllerProduit
 
 
                 $val = array(
-                    "idProduit" => 0,
-                    "nomProduit" => $_POST['name'],
-                    "description" => $_POST['desc'],
-                    "prix" => $_POST['price'],
+                    "nomProduit" => $_POST['nomProduit'],
+                    "description" => $_POST['description'],
+                    "prix" => $_POST['prix'],
                     "imageUrl" => $name
                 );
 
                 $prod = new ModelProduit($val);
+                var_dump($prod);
 
-                $saveEx = $prod->save();
+                $saveEx = $prod::save($val);
 
                 if ($saveEx == false) {
                     $controller = "";
@@ -228,7 +236,7 @@ class ControllerProduit
                     $pagetitle = 'Erreur !';
                     require(File::build_path(array("view", "view.php")));
                 }
-                self::readAll();
+                self::readAll(); 
             }else{
                 self::showError();
             }

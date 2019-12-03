@@ -30,11 +30,11 @@ class ControllerUtilisateur
 
     public static function validate()
     {
-        $login = $_GET['login'];
+        $login = $_GET['pseudo'];
         $nonce = $_GET['nonce'];
-        $user = ModelUtilisateur::getUserByPseudo($login);
+        $user = ModelUtilisateur::select($login);
 
-        if (ModelUtilisateur::getUserByPseudo($login) && $nonce == $user->getNonce()) {
+        if (ModelUtilisateur::select($login) && $nonce == $user->getNonce()) {
             $user->setNonceNull();
             ControllerUtilisateur::connect();
 
@@ -63,7 +63,7 @@ class ControllerUtilisateur
 
 
         if (ModelUtilisateur::checkPassword($pseudo, $password)) {
-            $user = ModelUtilisateur::getUserByPseudo($pseudo);
+            $user = ModelUtilisateur::select($pseudo);
             if ($user->getNonce() == 'NULL') {
                 $_SESSION['logged'] = 'true';
                 $_SESSION['login'] = $pseudo;
@@ -93,26 +93,27 @@ class ControllerUtilisateur
                 "pseudo" => $_POST['pseudo'],
                 "email" => $_POST['email'],
                 "mdp" => Security::chiffrer($_POST['password']),
-                "isAdmin" => $_POST['isAdmin'],
+                "isAdmin" => 0,
                 "nonce" => Security::generateRandomHex()
             );
 
             $u = new ModelUtilisateur($val);
+            var_dump($val);
+            var_dump($u);
 
-
-            $saveEx = $u->save();
+            $saveEx = $u::save($val);
             if ($saveEx == false) {
                 $controller = "";
                 $view = 'error';
                 $pagetitle = 'Erreur !';
                 require(File::build_path(array("view", "view.php")));
             } else {
+                /*
+                $mail = "Veuillez valider votre adresse mail à cette adresse : http://localhost/projet-php/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $u->getPseudo() . "&nonce=" . $u->getNonce;
 
-                $mail = "Veuillez valider votre adresse mail à cette adresse : http://localhost/projet-php/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $user->getPseudo() . "&nonce=" . $user->getNonce;
+                mail($u->getEmail(), $mail); */
 
-                mail($user->getEmail(), $mail);
-
-                ControllerProduit::readAll();
+                //ControllerProduit::readAll();
             }
 
         }
@@ -144,7 +145,7 @@ class ControllerUtilisateur
             $pagetitle = "Détails de la livraison";
             $type = "updateDeliveryInfo";
 
-            $user = ModelUtilisateur::getUserByPseudo($_SESSION['login']);
+            $user = ModelUtilisateur::select($_SESSION['login']);
 
             $name = $user->getName();
             $rue = $user->getRue();
@@ -170,7 +171,7 @@ class ControllerUtilisateur
 
     public static function readAllOrders()
     {
-        $tab_prod = ModelUtilisateur::getAllOrders();  //appel au modèle pour gerer la BD
+        $tab_prod = ModelUtilisateur::selectAll();  //appel au modèle pour gerer la BD
         $controller = 'utilisateur';
         $view = 'list';
         $pagetitle = 'Liste des commandes passées';

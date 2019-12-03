@@ -2,7 +2,7 @@
 
     require_once File::build_path(array("model","Model.php"));
 
-    class ModelUtilisateur{
+    class ModelUtilisateur extends Model{
         private $pseudo;
         private $email;
         private $mdp;
@@ -11,6 +11,8 @@
         private $rue;
         private $postalCode;
         private $nonce;
+        protected static $objet = "Utilisateur";
+        protected static $primary='pseudo';
 
         public function __construct($data = NULL)
         {
@@ -50,7 +52,7 @@
         }
         public function setNonceNull(){
             $this->nonce = 'NULL';
-            $sql = "UPDATE user SET nonce='NULL' where pseudo=:pseudo";
+            $sql = "UPDATE Utilisateur SET nonce='NULL' where pseudo=:pseudo";
 
             $req_prep = Model::$pdo->prepare($sql);
             $values = array(
@@ -62,7 +64,7 @@
         }
 
 
-        
+        /*
         public static function getUserByPseudo($pseudo)
         {
             $sql = "SELECT * from user WHERE pseudo=:pseudonyme";
@@ -83,10 +85,10 @@
             if (empty($tab_prod))
                 return false;
             return $tab_prod[0];
-        }
+        }*/
 
         public static function checkPassword($pseudo, $mdpChiffrer){
-            $sql = "SELECT * FROM user WHERE pseudo=:pseudo AND mdp=:pass";
+            $sql = "SELECT * FROM Utilisateur WHERE pseudo=:pseudo AND mdp=:pass";
 
             $req_prep = Model::$pdo->prepare($sql);
 
@@ -110,7 +112,7 @@
 
         }
 
-
+/*
         public function save()
         {
             $sql = "INSERT INTO `user` (`pseudo`, `email`, `mdp`, `isAdmin`,`nonce`) VALUES (:pseudo, :email, :mdp, :isAdmin,:nonce);";
@@ -131,11 +133,11 @@
                 }
             }
             return true;
-        }
+        }*/
 
         public static function saveDeliveryInfo($data)
         {
-            $sql = "UPDATE user SET name=:name, rue=:rue, postalCode=:postalCode WHERE pseudo=:pseudo";
+            $sql = "UPDATE Utilisateur SET name=:name, rue=:rue, postalCode=:postalCode WHERE pseudo=:pseudo";
             // Préparation de la requête
             $req_prep = Model::$pdo->prepare($sql);
 
