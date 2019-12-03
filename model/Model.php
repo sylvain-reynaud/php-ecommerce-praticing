@@ -63,6 +63,7 @@ require_once File::build_path(array("config","Conf.php"));
 		}
 
 		public static function delete($primary){
+			try{
 			$table_name = static::$objet;
 			$primary_key = static::$primary;
 			$class_name ="Model".ucfirst($table_name);
@@ -72,7 +73,12 @@ require_once File::build_path(array("config","Conf.php"));
 				"nom_tag" => $primary,
 			);
 			$req_prep->execute($values);
-		}
+		} catch (PDOException $e) {
+            if ($e->getCode() == 23000) {
+                return false;
+            }
+        }
+	}
 
 		public  static function update($data){
 			$table_name = static::$objet;
@@ -107,7 +113,6 @@ require_once File::build_path(array("config","Conf.php"));
 			$attribut=rtrim($attribut ,"\t,");
 			$val = rtrim($val ,"\t,");
 			$sql = "INSERT INTO $table_name ($attribut) VALUES ($val)";
-			var_dump($sql);
 			
 			$req_prep = Model::$pdo->prepare($sql);
 			$req_prep->execute($data);

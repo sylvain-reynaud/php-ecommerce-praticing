@@ -129,13 +129,14 @@ class ControllerProduit
             $id = $_GET['id'];
             $v = ModelProduit::delete($id);
             $controller = 'produits';
-            if (!$v) {
+            if ($v) {
                 $controller = "";
                 $view = 'error';
                 $pagetitle = 'Erreur !';
                 require(File::build_path(array("view", "view.php")));
+            }else{
+                self::readAll();
             }
-            self::readAll();
         }else{
             self::showError();
         }
