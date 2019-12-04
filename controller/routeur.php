@@ -1,20 +1,18 @@
 <?php
 
-require_once File::build_path(array("controller","ControllerProduit.php"));
-require_once File::build_path(array("controller","ControllerUtilisateur.php"));
+require_once File::build_path(array("controller", "ControllerProduit.php"));
+require_once File::build_path(array("controller", "ControllerUtilisateur.php"));
 
-if(isset($_GET['action']) && isset($_GET['controller'])){
+if (isset($_GET['action']) && isset($_GET['controller'])) {
     $action = $_GET['action'];
     $controller = $_GET['controller'];
     $availableActions = get_class_methods($controller);
-    if (in_array($action, $availableActions)) {
+    if (!is_null($availableActions) and in_array($action, $availableActions)) {
         $controller::$action();
+    } else {
+        ControllerProduit::showError("Bien essayé");
     }
-    else {
-        ControllerProduit::showError();
-    }
-}
-else {
+} else {
     ControllerProduit::readAll();
 }
 ?>

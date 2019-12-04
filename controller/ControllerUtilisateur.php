@@ -43,7 +43,6 @@ class ControllerUtilisateur
         if (ModelUtilisateur::select($login) && $nonce == $user->getNonce()) {
             $user->setNonceNull();
             ControllerUtilisateur::connect();
-
         } else {
             ControllerProduit::showError("Mauvais lien de confirmation");
         }
