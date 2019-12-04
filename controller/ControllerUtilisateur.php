@@ -111,8 +111,6 @@ class ControllerUtilisateur
             );
 
             $u = new ModelUtilisateur($val);
-            var_dump($val);
-            var_dump($u);
 
             $saveEx = $u::save($val);
             if ($saveEx == false) {
@@ -121,12 +119,12 @@ class ControllerUtilisateur
                 $pagetitle = 'Erreur !';
                 require(File::build_path(array("view", "view.php")));
             } else {
-                /*
+                
                 $mail = "Veuillez valider votre adresse mail à cette adresse : http://localhost/projet-php/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $u->getPseudo() . "&nonce=" . $u->getNonce;
 
-                mail($u->getEmail(), $mail); */
+                mail($u->getEmail(), $mail);
 
-                //ControllerProduit::readAll();
+                ControllerProduit::readAll();
             }
 
         }
