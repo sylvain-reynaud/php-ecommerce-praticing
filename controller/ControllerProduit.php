@@ -278,7 +278,7 @@ class ControllerProduit
                 }
                 self::readAll();
             } else {
-                self::showError("Produit invalide");
+                self::showError("Acces interdit");
             }
         }
     }
