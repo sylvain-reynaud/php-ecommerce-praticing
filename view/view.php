@@ -11,6 +11,8 @@
     <link href="styles/view.css" rel="stylesheet">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+
 </head>
 
 <body>
@@ -61,13 +63,17 @@ OEF;
         </div>
     </footer>
 
+
 <!--    Js-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var elems = document.querySelectorAll('.materialboxed');
         var instances = M.Materialbox.init(elems);
+        var elem = document.querySelector('.collapsible');
+        var instance = M.Collapsible.init(elem, {
+            accordion: false
+        });
     });
 </script>
 </body>

@@ -5,11 +5,11 @@ require_once File::build_path(array("model", "Model.php"));
 class ModelCommande extends Model
 {
 
-    private $idCommande;
+    private $id;
     private $idUser;
-    private $produits; // comme le panier
+    private $produits = array(); // comme le panier
 
-    protected static $primary='idCommande';
+    protected static $primary='id';
     
     protected static $objet = "commandes";
 
@@ -25,7 +25,7 @@ class ModelCommande extends Model
 
     public function getId()
     {
-        return $this->idCommande;
+            return $this->id;
     }
 
     public function getUserPseudo()
@@ -56,11 +56,18 @@ class ModelCommande extends Model
         // Attention, si il n'y a pas de résultats, on renvoie false
         if (empty($tab))
             return false;
+
+        foreach ($tab as $order) {
+            $p_array = self::getProductsFromOrder($order->id); // produits
+            array_push($order->produits, $p_array);
+        }
+//        var_dump($tab);
         return $tab;
     }
 
     public static function getProductsFromOrder($id)
     {
+        //TODO
         $sql = "SELECT * FROM produitsCommandes WHERE idCommande=:id";
 
         // Préparation de la requête
@@ -78,6 +85,10 @@ class ModelCommande extends Model
         // Attention, si il n'y a pas de résultats, on renvoie false
         if (empty($tab_prod))
             return false;
+        foreach ($tab_prod as $key => $produit) {
+            $tab_prod[$key] = array("object" => ModelProduit::select(intval($produit->getId())),
+                                                "quantity" => intval($produit->quantite));
+        }
         return $tab_prod;
 
     }
@@ -102,15 +113,15 @@ class ModelCommande extends Model
             return false;
         return $tab_prod[0];
     }
-/*
 
-    public function save()
+    // Ne peut pas utiliser la methode generique car on save dans deux tables
+    public static function save($data)
     {
         $sql = "INSERT INTO `commandes` (`idUser`) VALUES (:idUser);";
         try {
             $req_prep = Model::$pdo->prepare($sql);
             $values = array(
-                "idUser" => $this->getUserPseudo()
+                "idUser" => $data['idUser']
             );
 
             $req_prep->execute($values);
@@ -122,7 +133,7 @@ class ModelCommande extends Model
 
         $lastId = Model::$pdo->lastInsertId();
 
-        foreach ($this->produits as $productId => $productArr) {
+        foreach ($data['produits'] as $productId => $productArr) {
             $sql = "INSERT INTO `produitsCommandes` (`idCommande`, `idProduit`, `quantite`) VALUES (:idCommande, :idProduit, :quantite);";
             try {
                 $req_prep = Model::$pdo->prepare($sql);
@@ -141,7 +152,7 @@ class ModelCommande extends Model
         }
 
         return true;
-    }*/
+    }
 }
 
 ?>

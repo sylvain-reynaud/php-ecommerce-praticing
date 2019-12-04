@@ -162,9 +162,9 @@ class ControllerUtilisateur
     {
         ModelUtilisateur::saveDeliveryInfo($_POST);
         if (!empty($_SESSION["panier"])) {
-            $commande = new ModelCommande(array("idUser" => $_SESSION["login"],
-                "produits" => $_SESSION["panier"]));
-            $commande->save(array("idUser" => $_SESSION["login"]));
+            $data = array("idUser" => $_SESSION["login"],
+                "produits" => $_SESSION["panier"]);
+            ModelCommande::save($data);
             $_SESSION['panier'] = array();
         }
         // TODO : redirection vers historique commande (readall) + msg "commande confirmée"

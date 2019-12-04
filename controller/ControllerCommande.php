@@ -8,7 +8,6 @@ class ControllerCommande
     // TODO lister toutes les commandes
     public static function readAllOfUser($userId) {
         $tab = ModelCommande::getAllOrdersOfUser($userId);  //appel au modèle pour gerer la BD
-        var_dump($tab);
         $controller = 'commandes';
         $view = 'list';
         $pagetitle = 'Liste des commandes';
