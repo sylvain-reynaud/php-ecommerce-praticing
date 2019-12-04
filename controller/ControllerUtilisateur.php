@@ -121,12 +121,12 @@ class ControllerUtilisateur
                 $pagetitle = 'Erreur !';
                 require(File::build_path(array("view", "view.php")));
             } else {
-                /*
-                $mail = "Veuillez valider votre adresse mail à cette adresse : http://localhost/projet-php/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $u->getPseudo() . "&nonce=" . $u->getNonce;
+                
+                $mail = "Veuillez valider votre adresse mail à cette adresse : http://webinfo.iutmontp.univ-montp2.fr/~moulins/eCommerce/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $u->getPseudo() . "&nonce=" . $u->getNonce();
 
-                mail($u->getEmail(), $mail); */
+                mail($u->getEmail(), "Activation de votre compte sur test", $mail); 
 
-                //ControllerProduit::readAll();
+                ControllerProduit::readAll();
             }
 
         }
