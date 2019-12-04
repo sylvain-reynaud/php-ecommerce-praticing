@@ -1,6 +1,14 @@
 <form method="POST" action="index.php?action=<?php echo $type ?>&controller=ControllerUtilisateur" enctype="multipart/form-data">
   	<fieldset>
-    <legend> Ajout d'un utilisateur : </legend>
+    <?php 
+      if($type == "created"){
+        echo "<legend> Ajout d'un utilisateur : </legend>";
+      }else{
+        echo "<legend> Modifier mes informations : </legend>";
+      }
+
+    ?>
+    
     <p>
     <label for="pseudo">Pseudo :</label>
             <input type="text" value="<?php echo $pseudo ?>" placeholder="Ex : TotoDu34" name="pseudo" id="pseudo" required />
@@ -9,7 +17,7 @@
             <input type="email" value="<?php echo $email ?>" placeholder="Ex : totodu34@gmail.com" name="email" id="email" required />
             <br>
             <label for="password">Password</label>
-            <input type="password" value="<?php echo $mdp ?>" placeholder="Ex : *****" name="password" id="password" required />
+            <input type="password" placeholder="Ex : *****" name="password" id="password" required />
             <br>
             
             <label for="verifpassword">Retapez votre mdp</label>

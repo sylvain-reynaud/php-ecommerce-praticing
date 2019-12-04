@@ -17,10 +17,9 @@
 <header>
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Logo</a>
+            <a href="index.php" class="brand-logo">Logo</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="index.php?action=readAll">Voir tous les produits</a></li>
-                <li><a href="index.php?action=readAll&controller=ControllerProduit">Utilisateurs</a></li>
+                <li><a href="index.php">Nos produits</a></li>
                 <li><a href="index.php?action=readCart&controller=ControllerProduit">Panier : <?php echo ControllerProduit::countProductsInCart(); ?> produits</a></li>
                 
                 <?php 
@@ -32,6 +31,8 @@
 EOF;
                 }else{
                     echo <<<OEF
+                    <li><a href="index.php?action=update&controller=ControllerUtilisateur">Mon compte</a></li>
+
                     <li><a href="index.php?action=disconnect&controller=ControllerUtilisateur">Deconnexion</a></li>
 OEF;
                 }
