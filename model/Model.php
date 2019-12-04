@@ -44,7 +44,7 @@ require_once File::build_path(array("config","Conf.php"));
 			$primary_key = static::$primary;
 			$sql = "SELECT * from $table_name WHERE $primary_key = :nom_tag";
 
-			echo $sql;
+			//echo $sql;
 			// Préparation de la requête
 			$req_prep = Model::$pdo->prepare($sql);
 	

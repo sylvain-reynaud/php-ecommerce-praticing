@@ -120,10 +120,7 @@ class ControllerProduit
         $p = ModelProduit::select($id);     //appel au modèle pour gerer la BD
         $controller = 'produits';
         if (!$p) {
-            $controller = '';
-            $view = 'error';
-            $pagetitle = 'Erreur !';
-            require(File::build_path(array("view", "view.php")));
+            self::showError("Produit inconnu");
         } else {
             $view = 'detail';
             $pagetitle = 'Détails';
@@ -145,7 +142,7 @@ class ControllerProduit
     /**
      * Afficher une page d'erreur
      */
-    public static function showError()
+    public static function showError($error)
     {
         $controller = "";
         $view = 'error';
@@ -164,15 +161,12 @@ class ControllerProduit
             $v = ModelProduit::delete($id);
             $controller = 'produits';
             if ($v) {
-                $controller = "";
-                $view = 'error';
-                $pagetitle = 'Erreur !';
-                require(File::build_path(array("view", "view.php")));
+                self::showError("Produit invalide");
             } else {
                 self::readAll();
             }
         } else {
-            self::showError();
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
         }
     }
 
@@ -194,7 +188,7 @@ class ControllerProduit
 
             require(File::build_path(array("view", "view.php")));
         } else {
-            self::showError();
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
         }
     }
 
@@ -221,7 +215,7 @@ class ControllerProduit
             $prix = $pro->getPrice();
             require(File::build_path(array("view", "view.php")));
         } else {
-            self::showError();
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
         }
     }
 
@@ -243,7 +237,7 @@ class ControllerProduit
 
             self::readAll();
         } else {
-            self::showError();
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
         }
 
 
@@ -275,19 +269,16 @@ class ControllerProduit
                 );
 
                 $prod = new ModelProduit($val);
-                var_dump($prod);
+//                var_dump($prod);
 
                 $saveEx = ModelProduit::save($val);
 
                 if ($saveEx == false) {
-                    $controller = "";
-                    $view = 'error';
-                    $pagetitle = 'Erreur !';
-                    require(File::build_path(array("view", "view.php")));
+                    self::showError("Produit invalide");
                 }
                 self::readAll();
             } else {
-                self::showError();
+                self::showError("Produit invalide");
             }
         }
     }
