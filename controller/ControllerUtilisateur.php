@@ -161,10 +161,12 @@ class ControllerUtilisateur
     public static function updateDeliveryInfo()
     {
         ModelUtilisateur::saveDeliveryInfo($_POST);
-        $commande = new ModelCommande(array("idUser" => $_SESSION["login"],
-        "produits" => $_SESSION["panier"]));
-        $commande->save(array("idUser" => $_SESSION["login"]));
-        $_SESSION['panier'] = array();
+        if (!empty($_SESSION["panier"])) {
+            $commande = new ModelCommande(array("idUser" => $_SESSION["login"],
+                "produits" => $_SESSION["panier"]));
+            $commande->save(array("idUser" => $_SESSION["login"]));
+            $_SESSION['panier'] = array();
+        }
         // TODO : redirection vers historique commande (readall) + msg "commande confirmée"
         ControllerCommande::readAllOfUser($_SESSION["login"]);
     }
