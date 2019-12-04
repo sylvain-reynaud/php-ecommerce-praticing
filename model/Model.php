@@ -43,6 +43,8 @@ require_once File::build_path(array("config","Conf.php"));
 			$class_name ="Model".ucfirst($table_name);
 			$primary_key = static::$primary;
 			$sql = "SELECT * from $table_name WHERE $primary_key = :nom_tag";
+
+			echo $sql;
 			// Préparation de la requête
 			$req_prep = Model::$pdo->prepare($sql);
 	
@@ -57,8 +59,9 @@ require_once File::build_path(array("config","Conf.php"));
 			$req_prep->setFetchMode(PDO::FETCH_CLASS, $class_name);
 			$tab = $req_prep->fetchAll();
 			// Attention, si il n'y a pas de résultats, on renvoie false
-			if (empty($tab))
+			if (empty($tab)){
 				return false;
+			}
 			return $tab[0];
 		}
 

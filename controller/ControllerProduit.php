@@ -197,6 +197,7 @@ class ControllerProduit
             );
 
             ModelProduit::update($values);
+    
             self::readAll();
         }else{
             self::showError();
@@ -229,7 +230,7 @@ class ControllerProduit
                 $prod = new ModelProduit($val);
                 var_dump($prod);
 
-                $saveEx = $prod::save($val);
+                $saveEx = ModelProduit::save($val);
 
                 if ($saveEx == false) {
                     $controller = "";

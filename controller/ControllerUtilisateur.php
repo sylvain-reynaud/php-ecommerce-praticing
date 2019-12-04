@@ -85,7 +85,20 @@ class ControllerUtilisateur
 
         if (($_POST['password']) != ($_POST['verifpassword']) && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
             $erreur = "Entrez des mots de passes identiques";
-            self::create();
+            $controller = "utilisateur";
+            $view = 'create';
+            $pagetitle = "Creation d'un utilisateur";
+            $type = 'created';
+
+            $u = ModelUtilisateur::select($_SESSION['login']);
+
+
+            $pseudo = $_POST['pseudo'];
+            $email = $_POST['email'];
+            $password = '';
+            $erreur = 'Entrez des mots de passes identiques';
+
+        require(File::build_path(array("view", "view.php")));
         } else {
 
 
@@ -108,12 +121,12 @@ class ControllerUtilisateur
                 $pagetitle = 'Erreur !';
                 require(File::build_path(array("view", "view.php")));
             } else {
-                /*
-                $mail = "Veuillez valider votre adresse mail à cette adresse : http://localhost/projet-php/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $u->getPseudo() . "&nonce=" . $u->getNonce;
+                
+                $mail = "Veuillez valider votre adresse mail à cette adresse : http://webinfo.iutmontp.univ-montp2.fr/~moulins/eCommerce/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $u->getPseudo() . "&nonce=" . $u->getNonce();
 
-                mail($u->getEmail(), $mail); */
+                mail($u->getEmail(), "Activation de votre compte sur test", $mail); 
 
-                //ControllerProduit::readAll();
+                ControllerProduit::readAll();
             }
 
         }
@@ -132,9 +145,66 @@ class ControllerUtilisateur
         $mdp = '';
         if (!isset($erreur)) {
             $erreur = '';
+        }else{
+            $erreur = $erreur;
         }
 
         require(File::build_path(array("view", "view.php")));
+    }
+    public static function update()
+    {
+        $controller = "utilisateur";
+        $view = 'create';
+        $pagetitle = "Creation d'un utilisateur";
+        $type = 'updated';
+
+        $u = ModelUtilisateur::select($_SESSION['login']);
+
+
+        $pseudo = $u->getPseudo();
+        $email = $u->getEmail();
+        $password = '';
+        $mdp = '';
+        $erreur = '';
+
+        require(File::build_path(array("view", "view.php")));
+    }
+
+    public static function updated()
+    {
+        if (($_POST['password']) != ($_POST['verifpassword']) && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            $erreur = "Entrez des mots de passes identiques";
+            $controller = "utilisateur";
+            $view = 'create';
+            $pagetitle = "Creation d'un utilisateur";
+            $type = 'updated';
+
+            $u = ModelUtilisateur::select($_SESSION['login']);
+
+
+            $pseudo = $_POST['pseudo'];
+            $email = $_POST['email'];
+            $password = '';
+            $mdp = '';
+
+            require(File::build_path(array("view", "view.php")));
+
+        } else {
+
+           // ModelUtilisateur::select()
+
+
+            $val = array(
+                "pseudo" => $_POST['pseudo'],
+                "email" => $_POST['email'],
+                "mdp" => Security::chiffrer($_POST['password']),
+            );
+
+            ModelUtilisateur::update($val);
+
+
+            ControllerProduit::readAll();
+        }
     }
 
     public static function deliveryInfo()

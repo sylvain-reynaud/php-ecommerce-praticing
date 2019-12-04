@@ -11,18 +11,15 @@
     <link href="styles/view.css" rel="stylesheet">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
-
 </head>
 
 <body>
 <header>
     <nav>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">Logo</a>
+            <a href="index.php" class="brand-logo">Logo</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="index.php">Voir tous les produits</a></li>
-                <li><a href="index.php?action=readAll&controller=ControllerProduit">Utilisateurs</a></li>
+                <li><a href="index.php">Nos produits</a></li>
                 <li><a href="index.php?action=readCart&controller=ControllerProduit">Panier : <?php echo ControllerProduit::countProductsInCart(); ?> produits</a></li>
                 
                 <?php 
@@ -63,9 +60,9 @@ OEF;
         </div>
     </footer>
 
-
 <!--    Js-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var elems = document.querySelectorAll('.materialboxed');
