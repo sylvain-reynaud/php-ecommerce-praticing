@@ -4,19 +4,28 @@
 if (!$tab) {
     echo "<p>Vous n'avez pas encore passé de commande.</p>";
 } else {
-    foreach ($tab as $c) {
+    foreach ($tab as $order) {
+        $produits = $order->getProduits()[0];
         echo '<li>
-                <div class="collapsible-header"><i class="material-icons">filter_drama</i> Commande n°' . $c->getId() . '</div>
-                <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
-              </li>';
+                <div class="collapsible-header"><i class="material-icons">filter_drama</i> Commande n°' . $order->getId() . '</div>
+                <div class="collapsible-body">
+                    <ul>';
+        foreach ($produits as $item) {
+            $p = $item["object"];
+            $quantity = $item["quantity"];
+            echo '<li>
+                        <ul>
+                            <li>'.$p->getName().'<ul>
+                            <li>'.$p->getPrice().' €<ul>
+                        </ul>
+                    </li><br>';
+        }
+
+        echo '</ul></div></li>';
     }
-    }
-    ?>
+}
+?>
     </ul>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('.collapsible');
-            var instances = M.Collapsible.init(elems, options);
-        });
-    </script>
 </div>
+
+

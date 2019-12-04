@@ -10,6 +10,9 @@ require_once File::build_path(array("lib", "Security.php"));
 class ControllerUtilisateur
 {
 
+    /**
+     * Deconnecte l'user
+     */
     public static function disconnect()
     {
         session_unset();
@@ -28,6 +31,9 @@ class ControllerUtilisateur
         ControllerProduit::readAll();
     }
 
+    /**
+     * Confirme l'email d'un user
+     */
     public static function validate()
     {
         $login = $_GET['pseudo'];
@@ -39,10 +45,13 @@ class ControllerUtilisateur
             ControllerUtilisateur::connect();
 
         } else {
-            echo("Mauvais lien de confirmation");
+            ControllerProduit::showError("Mauvais lien de confirmation");
         }
     }
 
+    /**
+     * Afficher page de connexion user
+     */
     public static function connect()
     {
         $controller = "utilisateur";
@@ -52,15 +61,13 @@ class ControllerUtilisateur
         require(File::build_path(array("view", "view.php")));
     }
 
+    /**
+     * Connecte l'user
+     */
     public static function connected()
     {
-        $controller = "produits";
-        $view = "list";
-        $pagetitle = "Connecté!";
-
         $pseudo = $_POST['pseudo'];
         $password = Security::chiffrer($_POST['password']);
-
 
         if (ModelUtilisateur::checkPassword($pseudo, $password)) {
             $user = ModelUtilisateur::select($pseudo);
@@ -80,27 +87,27 @@ class ControllerUtilisateur
         }
     }
 
+    /**
+     * Crée un nouvel user
+     */
     public static function created()
     {
 
         if (($_POST['password']) != ($_POST['verifpassword']) && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            $erreur = "Entrez des mots de passes identiques";
+            $erreur = "Entrez des mots de passe identiques";
             $controller = "utilisateur";
             $view = 'create';
-            $pagetitle = "Creation d'un utilisateur";
+            $pagetitle = "Création d'un utilisateur";
             $type = 'created';
 
             $u = ModelUtilisateur::select($_SESSION['login']);
 
-
             $pseudo = $_POST['pseudo'];
             $email = $_POST['email'];
             $password = '';
-            $erreur = 'Entrez des mots de passes identiques';
 
-        require(File::build_path(array("view", "view.php")));
+            require(File::build_path(array("view", "view.php")));
         } else {
-
 
             $val = array(
                 "pseudo" => $_POST['pseudo'],
@@ -114,22 +121,19 @@ class ControllerUtilisateur
 
             $saveEx = $u::save($val);
             if ($saveEx == false) {
-                $controller = "";
-                $view = 'error';
-                $pagetitle = 'Erreur !';
-                require(File::build_path(array("view", "view.php")));
+                ControllerProduit::showError("Utilisateur invalide");
             } else {
-                
-                $mail = "Veuillez valider votre adresse mail à cette adresse : http://localhost/projet-php/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $u->getPseudo() . "&nonce=" . $u->getNonce;
-
-                mail($u->getEmail(), $mail);
-
+                $mail = "Veuillez valider votre adresse mail à cette adresse : http://webinfo.iutmontp.univ-montp2.fr/~moulins/eCommerce/index.php?action=validate&controller=ControllerUtilisateur&pseudo=" . $u->getPseudo() . "&nonce=" . $u->getNonce();
+                mail($u->getEmail(), "Activation de votre compte sur test", $mail);
                 ControllerProduit::readAll();
             }
 
         }
     }
 
+    /**
+     * Affiche la page form d'inscription
+     */
     public static function create()
     {
         $controller = "utilisateur";
@@ -141,14 +145,13 @@ class ControllerUtilisateur
         $email = '';
         $password = '';
         $mdp = '';
-        if (!isset($erreur)) {
-            $erreur = '';
-        }else{
-            $erreur = $erreur;
-        }
 
         require(File::build_path(array("view", "view.php")));
     }
+
+    /**
+     * Affiche la page form pour update un user
+     */
     public static function update()
     {
         $controller = "utilisateur";
@@ -168,6 +171,9 @@ class ControllerUtilisateur
         require(File::build_path(array("view", "view.php")));
     }
 
+    /**
+     * Met à jour l'user
+     */
     public static function updated()
     {
         if (($_POST['password']) != ($_POST['verifpassword']) && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
@@ -189,7 +195,7 @@ class ControllerUtilisateur
 
         } else {
 
-           // ModelUtilisateur::select()
+            // ModelUtilisateur::select()
 
 
             $val = array(
@@ -229,10 +235,12 @@ class ControllerUtilisateur
     public static function updateDeliveryInfo()
     {
         ModelUtilisateur::saveDeliveryInfo($_POST);
-        $commande = new ModelCommande(array("idUser" => $_SESSION["login"],
-        "produits" => $_SESSION["panier"]));
-        $commande->save(array("idUser" => $_SESSION["login"]));
-        $_SESSION['panier'] = array();
+        if (!empty($_SESSION["panier"])) {
+            $data = array("idUser" => $_SESSION["login"],
+                "produits" => $_SESSION["panier"]);
+            ModelCommande::save($data);
+            $_SESSION['panier'] = array();
+        }
         // TODO : redirection vers historique commande (readall) + msg "commande confirmée"
         ControllerCommande::readAllOfUser($_SESSION["login"]);
     }

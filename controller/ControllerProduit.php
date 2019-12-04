@@ -5,8 +5,12 @@ require_once File::build_path(array("model", "ModelProduit.php"));
 
 class ControllerProduit
 {
-
-    private static function csrfCheck() {
+    /**
+     * Vérifie le token CSRF
+     * @return bool
+     */
+    private static function csrfCheck()
+    {
         global $CSRF_NAME;
         if (isset($_SESSION[$CSRF_NAME]) AND isset($_GET[$CSRF_NAME]) AND
             !empty($_SESSION[$CSRF_NAME]) AND !empty($_GET[$CSRF_NAME])) {
@@ -14,6 +18,9 @@ class ControllerProduit
         }
     }
 
+    /**
+     * Affiche la page Panier
+     */
     public static function readCart()
     {
         $tab_prod = $_SESSION['panier'];
@@ -27,7 +34,12 @@ class ControllerProduit
         require(File::build_path(array("view", "view.php")));
     }
 
-    public static function countProductsInCart() {
+    /**
+     * Compte le nombre de produits dans le panier
+     * @return int
+     */
+    public static function countProductsInCart()
+    {
         $sum = 0;
         $tab_prod = $_SESSION['panier'];
 
@@ -37,24 +49,29 @@ class ControllerProduit
         return $sum;
     }
 
+    /**
+     * Ajoute le produit passé par get dans le panier
+     */
     public static function addToCart()
     {
-        if (self::csrfCheck()){
-                if (isset($_GET["id"]) && ModelProduit::select($_GET["id"])) {
-                    if (array_key_exists($_GET["id"], $_SESSION['panier'])) {
-                        $_SESSION['panier'][$_GET["id"]]["quantity"] += 1;
-                    } else {
-                        $_SESSION['panier'] += array($_GET["id"] => array("quantity" => 1));
-                    }
+        if (self::csrfCheck()) {
+            if (isset($_GET["id"]) && ModelProduit::select($_GET["id"])) {
+                if (array_key_exists($_GET["id"], $_SESSION['panier'])) {
+                    $_SESSION['panier'][$_GET["id"]]["quantity"] += 1;
+                } else {
+                    $_SESSION['panier'] += array($_GET["id"] => array("quantity" => 1));
                 }
-                self::readAll();
-        }
-        else {
+            }
+            self::readAll();
+        } else {
             // pas de token csrf
             echo "Erreur de vérification !";
         }
     }
 
+    /**
+     * Enleve le produit passé par get du panier
+     */
     public static function removeFromCart()
     {
         if (self::csrfCheck()) {
@@ -67,6 +84,9 @@ class ControllerProduit
         }
     }
 
+    /**
+     * Affiche la liste de tous les produits du site
+     */
     public static function readAll()
     {
         $tab_prod = ModelProduit::selectAll();  //appel au modèle pour gerer la BD
@@ -76,45 +96,53 @@ class ControllerProduit
         require(File::build_path(array("view", "view.php")));  //"redirige" vers la vue
     }
 
+    /**
+     * Renvoie l'id d'un produit aléatoire, utile pour afficher un autre produit qui pourrait intéresser le client
+     *  sur la page d'un produit
+     * @param $idQuOnNeVeutPas  id d'un produit exclu de la selection
+     * @return int
+     */
     public static function randomId($idQuOnNeVeutPas)
     {
         $tab_prod = ModelProduit::selectAll();
         do {
             $r = $tab_prod[array_rand($tab_prod)];
-        } while($r->getId() == $idQuOnNeVeutPas);
+        } while ($r->getId() == $idQuOnNeVeutPas);
         return $r->getId();
     }
 
+    /**
+     * Affiche la page détaillée d'un produit
+     */
     public static function read()
     {
         $id = $_GET['id'];
         $p = ModelProduit::select($id);     //appel au modèle pour gerer la BD
         $controller = 'produits';
         if (!$p) {
-            $controller = '';
-            $view = 'error';
-            $pagetitle = 'Erreur !';
-            require(File::build_path(array("view", "view.php")));
+            self::showError("Produit inconnu");
         } else {
             $view = 'detail';
             $pagetitle = 'Détails';
-            if(isset($_COOKIE["lastProductSeen"]) and
+            if (isset($_COOKIE["lastProductSeen"]) and
                 $_COOKIE["lastProductSeen"] != $id and
                 ModelProduit::select($_COOKIE["lastProductSeen"])) {
                 $titreLast = "Dernier produit vu :";
                 $lastProductSeen = ModelProduit::select($_COOKIE["lastProductSeen"]);
-            }
-            else {
+            } else {
                 // Affiche un autre produit aléatoire
                 $titreLast = "Ce produit pourrait vous plaire :";
                 $lastProductSeen = ModelProduit::select(ControllerProduit::randomId($id));
             }
-            setcookie("lastProductSeen", $id, time()+3600); // 1h
+            setcookie("lastProductSeen", $id, time() + 3600); // 1h
             require(File::build_path(array("view", "view.php")));
         }
     }
 
-    public static function showError()
+    /**
+     * Afficher une page d'erreur
+     */
+    public static function showError($error)
     {
         $controller = "";
         $view = 'error';
@@ -122,6 +150,9 @@ class ControllerProduit
         require(File::build_path(array("view", "view.php")));
     }
 
+    /**
+     * Supprime un produit passé en get
+     */
     public static function delete()
     {
 
@@ -130,25 +161,25 @@ class ControllerProduit
             $v = ModelProduit::delete($id);
             $controller = 'produits';
             if ($v) {
-                $controller = "";
-                $view = 'error';
-                $pagetitle = 'Erreur !';
-                require(File::build_path(array("view", "view.php")));
-            }else{
+                self::showError("Produit invalide");
+            } else {
                 self::readAll();
             }
-        }else{
-            self::showError();
+        } else {
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
         }
     }
 
+    /**
+     * Affiche la page form pour creer un produit
+     */
     public static function create()
     {
-        if($_SESSION['admin']=='true'){
+        if ($_SESSION['admin'] == 'true') {
             $controller = "produits";
             $view = 'create';
             $pagetitle = "Creation d'un produit";
-            $type= 'created';
+            $type = 'created';
 
             $id = '';
             $name = '';
@@ -156,16 +187,19 @@ class ControllerProduit
             $prix = '';
 
             require(File::build_path(array("view", "view.php")));
-        }else{
-            self::showError();
+        } else {
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
         }
     }
 
+    /**
+     * Affiche la page form pour modifier un produit
+     */
     public static function update()
     {
 
 
-        if ($_SESSION['admin'] == 'true'){
+        if ($_SESSION['admin'] == 'true') {
 
             $controller = "produits";
             $view = 'create';
@@ -180,14 +214,17 @@ class ControllerProduit
             $desc = $pro->getDesc();
             $prix = $pro->getPrice();
             require(File::build_path(array("view", "view.php")));
-        }else{
-            self::showError();
+        } else {
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
         }
     }
 
+    /**
+     * Modifie un produit
+     */
     public static function updated()
     {
-        if($_SESSION['admin']=='true'){
+        if ($_SESSION['admin'] == 'true') {
 
             $values = array(
                 "idProduit" => $_POST['idProduit'],
@@ -197,18 +234,22 @@ class ControllerProduit
             );
 
             ModelProduit::update($values);
-    
+
             self::readAll();
-        }else{
-            self::showError();
+        } else {
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
         }
 
 
     }
 
-    public static function created(){
+    /**
+     * Creer un nouveau produit
+     */
+    public static function created()
+    {
         {
-            if (/*self::csrfCheck() && */$_SESSION['admin']=='true') {
+            if (/*self::csrfCheck() && */ $_SESSION['admin'] == 'true') {
                 $name = $_FILES['fileToUpload']['name'];
                 $pic_path = "images/$name";
 
@@ -228,19 +269,16 @@ class ControllerProduit
                 );
 
                 $prod = new ModelProduit($val);
-                var_dump($prod);
+//                var_dump($prod);
 
                 $saveEx = ModelProduit::save($val);
 
                 if ($saveEx == false) {
-                    $controller = "";
-                    $view = 'error';
-                    $pagetitle = 'Erreur !';
-                    require(File::build_path(array("view", "view.php")));
+                    self::showError("Produit invalide");
                 }
-                self::readAll(); 
-            }else{
-                self::showError();
+                self::readAll();
+            } else {
+                self::showError("Produit invalide");
             }
         }
     }
