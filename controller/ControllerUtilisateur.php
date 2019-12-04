@@ -140,6 +140,7 @@ class ControllerUtilisateur
             $view = 'create';
             $pagetitle = "Creation d'un utilisateur";
             $type = 'created';
+            $erreur = '';
 
             $pseudo = '';
             $email = '';
@@ -247,14 +248,18 @@ class ControllerUtilisateur
 
     public static function updateDeliveryInfo()
     {
-        ModelUtilisateur::saveDeliveryInfo($_POST);
-        if (!empty($_SESSION["panier"])) {
-            $data = array("idUser" => $_SESSION["login"],
-                "produits" => $_SESSION["panier"]);
-            ModelCommande::save($data);
-            $_SESSION['panier'] = array();
+        if(ControllerProduit::csrfCheck()) {
+            ModelUtilisateur::saveDeliveryInfo($_POST);
+            if (!empty($_SESSION["panier"])) {
+                $data = array("idUser" => $_SESSION["login"],
+                    "produits" => $_SESSION["panier"]);
+                ModelCommande::save($data);
+                $_SESSION['panier'] = array();
+            }
+            ControllerCommande::readAllOfUser($_SESSION["login"]);
+        } else {
+            ControllerProduit::showError("non");
         }
-        ControllerCommande::readAllOfUser($_SESSION["login"]);
     }
 
     public static function readAllOrders()

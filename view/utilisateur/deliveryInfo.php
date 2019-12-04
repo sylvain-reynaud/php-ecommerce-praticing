@@ -1,4 +1,5 @@
 <form method="POST" action="index.php?action=<?php echo $type ?>&controller=ControllerUtilisateur" enctype="multipart/form-data">
+    <input type="hidden" name="<?php global $CSRF_NAME; echo $CSRF_NAME ?>" id="<?php global $CSRF_NAME; echo $CSRF_NAME ?>" value="<?php global $CSRF_NAME; echo $_SESSION[$CSRF_NAME]; ?>" />
     <fieldset>
         <legend> Information sur la livraison : </legend>
         <p>

@@ -9,13 +9,21 @@ class ControllerProduit
      * Vérifie le token CSRF
      * @return bool
      */
-    private static function csrfCheck()
+    public static function csrfCheck()
     {
         global $CSRF_NAME;
+        var_dump($_GET);
+        var_dump($_POST);
+        // GET
         if (isset($_SESSION[$CSRF_NAME]) AND isset($_GET[$CSRF_NAME]) AND
             !empty($_SESSION[$CSRF_NAME]) AND !empty($_GET[$CSRF_NAME])) {
             return $_SESSION[$CSRF_NAME] == $_GET[$CSRF_NAME];
         }
+        // POST
+        elseif (isset($_SESSION[$CSRF_NAME]) AND isset($_POST[$CSRF_NAME]) AND
+            !empty($_SESSION[$CSRF_NAME]) AND !empty($_POST[$CSRF_NAME])){
+            return $_SESSION[$CSRF_NAME] == $_POST[$CSRF_NAME];
+        } else { return false;}
     }
 
     /**
@@ -197,9 +205,7 @@ class ControllerProduit
      */
     public static function update()
     {
-
-
-        if ($_SESSION['admin'] == 'true') {
+        if ($_SESSION['admin'] == 'true' and isset($_GET['id'])) {
 
             $controller = "produits";
             $view = 'create';
@@ -224,7 +230,7 @@ class ControllerProduit
      */
     public static function updated()
     {
-        if ($_SESSION['admin'] == 'true') {
+        if (self::csrfCheck() and $_SESSION['admin'] == 'true') {
 
             $values = array(
                 "idProduit" => $_POST['idProduit'],
@@ -237,7 +243,7 @@ class ControllerProduit
 
             self::readAll();
         } else {
-            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh");
+            self::showError("Vous n'avez pas l'autorisation de faire ça, sorry bruh!");
         }
 
 
