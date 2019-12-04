@@ -43,7 +43,6 @@ class ControllerUtilisateur
         if (ModelUtilisateur::select($login) && $nonce == $user->getNonce()) {
             $user->setNonceNull();
             ControllerUtilisateur::connect();
-
         } else {
             ControllerProduit::showError("Mauvais lien de confirmation");
         }
@@ -73,7 +72,7 @@ class ControllerUtilisateur
             $user = ModelUtilisateur::select($pseudo);
             if ($user->getNonce() == 'NULL') {
                 $_SESSION['logged'] = 'true';
-                $_SESSION['login'] = $pseudo;
+                $_SESSION['login'] = $user->getPseudo();
                 $admin = $user->getIsAdmin();
                 if ($admin) {
                     $_SESSION['admin'] = 'true';
@@ -136,17 +135,21 @@ class ControllerUtilisateur
      */
     public static function create()
     {
-        $controller = "utilisateur";
-        $view = 'create';
-        $pagetitle = "Creation d'un utilisateur";
-        $type = 'created';
+        if (empty($_SESSION['login'])) {
+            $controller = "utilisateur";
+            $view = 'create';
+            $pagetitle = "Creation d'un utilisateur";
+            $type = 'created';
 
-        $pseudo = '';
-        $email = '';
-        $password = '';
-        $mdp = '';
+            $pseudo = '';
+            $email = '';
+            $password = '';
+            $mdp = '';
 
-        require(File::build_path(array("view", "view.php")));
+            require(File::build_path(array("view", "view.php")));
+        } else {
+            ControllerProduit::showError("Action impossible");
+        }
     }
 
     /**
@@ -159,16 +162,21 @@ class ControllerUtilisateur
         $pagetitle = "Creation d'un utilisateur";
         $type = 'updated';
 
-        $u = ModelUtilisateur::select($_SESSION['login']);
+        if (!empty($_SESSION['login'])) {
+            $u = ModelUtilisateur::select($_SESSION['login']);
 
 
-        $pseudo = $u->getPseudo();
-        $email = $u->getEmail();
-        $password = '';
-        $mdp = '';
-        $erreur = '';
+            $pseudo = $u->getPseudo();
+            $email = $u->getEmail();
+            $password = '';
+            $mdp = '';
+            $erreur = '';
 
-        require(File::build_path(array("view", "view.php")));
+            require(File::build_path(array("view", "view.php")));
+        } else {
+            ControllerProduit::showError("Vous n'etes pas connecté");
+        }
+
     }
 
     /**
@@ -176,38 +184,43 @@ class ControllerUtilisateur
      */
     public static function updated()
     {
-        if (($_POST['password']) != ($_POST['verifpassword']) && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            $erreur = "Entrez des mots de passes identiques";
-            $controller = "utilisateur";
-            $view = 'create';
-            $pagetitle = "Creation d'un utilisateur";
-            $type = 'updated';
+        if ($_SESSION['login'] == $_POST['pseudo']) {
+            if (($_POST['password']) != ($_POST['verifpassword']) && filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+                $erreur = "Entrez des mots de passes identiques";
+                $controller = "utilisateur";
+                $view = 'create';
+                $pagetitle = "Creation d'un utilisateur";
+                $type = 'updated';
 
-            $u = ModelUtilisateur::select($_SESSION['login']);
-
-
-            $pseudo = $_POST['pseudo'];
-            $email = $_POST['email'];
-            $password = '';
-            $mdp = '';
-
-            require(File::build_path(array("view", "view.php")));
-
-        } else {
-
-            // ModelUtilisateur::select()
+                $u = ModelUtilisateur::select($_SESSION['login']);
 
 
-            $val = array(
-                "pseudo" => $_POST['pseudo'],
-                "email" => $_POST['email'],
-                "mdp" => Security::chiffrer($_POST['password']),
-            );
+                $pseudo = $_POST['pseudo'];
+                $email = $_POST['email'];
+                $password = '';
+                $mdp = '';
 
-            ModelUtilisateur::update($val);
+                require(File::build_path(array("view", "view.php")));
+
+            } else {
+
+                // ModelUtilisateur::select()
 
 
-            ControllerProduit::readAll();
+                $val = array(
+                    "pseudo" => $_POST['pseudo'],
+                    "email" => $_POST['email'],
+                    "mdp" => Security::chiffrer($_POST['password']),
+                );
+
+                ModelUtilisateur::update($val);
+
+
+                ControllerProduit::readAll();
+            }
+        }
+        else {
+            ControllerProduit::showError("T'essaies de faire quoi là ?");
         }
     }
 
@@ -241,7 +254,6 @@ class ControllerUtilisateur
             ModelCommande::save($data);
             $_SESSION['panier'] = array();
         }
-        // TODO : redirection vers historique commande (readall) + msg "commande confirmée"
         ControllerCommande::readAllOfUser($_SESSION["login"]);
     }
 
