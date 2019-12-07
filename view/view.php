@@ -25,6 +25,12 @@
 
                 <?php
 
+                if($_SESSION['admin'] == 'true'){
+                    echo <<<OEF
+                    <li><a href="index.php?action=create&controller=ControllerProduit">Ajouter un produit</a></li>
+OEF;
+                }
+
                 if ($_SESSION['logged'] == 'false') {
                     echo <<<EOF
                     <li><a href="index.php?action=create&controller=ControllerUtilisateur">Créer un compte</a></li>
@@ -32,9 +38,11 @@
 EOF;
                 } else {
                     echo <<<OEF
+                    <li><a href="index.php?action=account&controller=ControllerUtilisateur">Mon compte</a></li>
                     <li><a href="index.php?action=disconnect&controller=ControllerUtilisateur">Deconnexion</a></li>
 OEF;
                 }
+
 
                 ?>
             </ul>

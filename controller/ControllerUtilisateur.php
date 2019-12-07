@@ -133,6 +133,19 @@ class ControllerUtilisateur
     /**
      * Affiche la page form d'inscription
      */
+    public static function account(){
+        if (!empty($_SESSION['login'])){
+            $controller="utilisateur";
+            $view="account";
+            $pagetitle="Mon compte";
+
+            require(File::build_path(array("view","view.php")));
+        }else{
+            ControllerProduit::showError("Vous devez être connecté pour accéder à cette page");
+        }
+    }
+
+    
     public static function create()
     {
         if (empty($_SESSION['login'])) {
@@ -256,7 +269,10 @@ class ControllerUtilisateur
                 ModelCommande::save($data);
                 $_SESSION['panier'] = array();
             }
-            ControllerCommande::readAllOfUser($_SESSION["login"]);
+            /*
+            ControllerCommande::readAllOfUser($_SESSION["login"]);*/
+            
+            ControllerCommande::readAllOfUser();
         } else {
             ControllerProduit::showError("non");
         }
