@@ -16,7 +16,7 @@ if (!$tab) {
             echo '<li>
                         <ul>
                             <li>'.$quantity. 'x ' .$p->getName().'<ul>
-                            <li>'.$p->getPrice().' €<ul>
+                            <li>'.$p->getPrice()*$quantity.' €<ul>
                         </ul>
                     </li><br>';
         }
