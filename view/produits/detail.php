@@ -7,7 +7,7 @@ echo '
 <div class="row">
 <!--    img  -->
     <div class="col s3">
-        <img class="materialboxed responsive-img" width="200" src="images/' . $p->getImageUrl() . '">
+        <img class="materialboxed responsive-img" width="200" src="images/' . urlencode($p->getImageUrl()) . '">
     </div>
 <!--    titre + desc-->
     <div class="col s6">
