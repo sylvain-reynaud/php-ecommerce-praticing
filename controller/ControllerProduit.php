@@ -142,7 +142,7 @@ class ControllerProduit
                 $titreLast = "Ce produit pourrait vous plaire :";
                 $lastProductSeen = ModelProduit::select(ControllerProduit::randomId($id));
             }
-            setcookie("lastProductSeen", $id, time() + 3600); // 1h
+            setcookie("lastProductSeen", $id, time() + 3600, "/~moulins/"); // 1h
             require(File::build_path(array("view", "view.php")));
         }
     }

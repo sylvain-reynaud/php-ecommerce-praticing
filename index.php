@@ -3,6 +3,7 @@ $ROOT_FOLDER = __DIR__;
 $DS = DIRECTORY_SEPARATOR;
 require_once $ROOT_FOLDER.$DS.'lib'. $DS.'File.php';
 
+session_set_cookie_params(0,'/~moulins/');
 session_start();
 
 // Création du token csrf
