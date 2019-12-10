@@ -63,6 +63,26 @@
 
         }
 
+        /**
+         * @param mixed $isAdmin
+         */
+        public function setIsAdmin($isAdmin)
+        {
+            $this->isAdmin = $isAdmin;
+
+            $sql = "UPDATE Utilisateur SET isAdmin=:isAdmin where pseudo=:pseudo";
+
+            $req_prep = Model::$pdo->prepare($sql);
+            $values = array(
+                "isAdmin" => boolval($isAdmin) ? '1' : '0',
+                "pseudo" => $this->pseudo
+            );
+
+            $req_prep->execute($values);
+        }
+
+
+
 
         /*
         public static function getUserByPseudo($pseudo)

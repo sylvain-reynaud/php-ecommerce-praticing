@@ -12,8 +12,8 @@ class ControllerProduit
     public static function csrfCheck()
     {
         global $CSRF_NAME;
-        var_dump($_GET);
-        var_dump($_POST);
+//        var_dump($_GET);
+//        var_dump($_POST);
         // GET
         if (isset($_SESSION[$CSRF_NAME]) AND isset($_GET[$CSRF_NAME]) AND
             !empty($_SESSION[$CSRF_NAME]) AND !empty($_GET[$CSRF_NAME])) {

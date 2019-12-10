@@ -1,25 +1,18 @@
 <div class="row">
-    <ul class="collapsible">
+    <ul class="collection">
 <?php
+    global $CSRF_NAME;
 
     foreach ($tab as $user) {
-        $produits = $user->getProduits()[0];
-        echo '<li>
-                <div class="collapsible-header"><i class="material-icons">filter_drama</i> ' . $user->getId() . '</div>
-                <div class="collapsible-body">
-                    <ul>';
-        foreach ($produits as $item) {
-            $p = $item["object"];
-            $quantity = $item["quantity"];
-            echo '<li>
-                        <ul>
-                            <li>'.$quantity. 'x ' .$p->getName().'<ul>
-                            <li>'.$p->getPrice()*$quantity.' €<ul>
-                        </ul>
-                    </li><br>';
-        }
-
-        echo '</ul></div></li>';
+        echo '
+    <li class="collection-item avatar">
+        <i class="material-icons circle">account_circle</i>
+      <span class="title">'. htmlspecialchars($user->getPseudo()) .'</span>
+      <p>'. htmlspecialchars($user->getEmail()) .'<br>
+        </p>
+        <span class="secondary-content">Admin : <a href="index.php?action=changeAdminMode&controller=ControllerUtilisateur&id='. htmlspecialchars($user->getPseudo()) .'&csrf_token='.$_SESSION[$CSRF_NAME].'" <i class="material-icons">check_circle'. ($user->getIsAdmin() ? '' : '_outline') .'</i></a></span>
+    </li>
+  ';
     }
 ?>
     </ul>

@@ -32,6 +32,22 @@ class ControllerUtilisateur
     }
 
     /**
+     * Affiche la liste de tous les utilisateurs du site
+     */
+    public static function readAll()
+    {
+        if ($_SESSION['admin'] == 'true') {
+            $tab = ModelUtilisateur::selectAll();  //appel au modèle pour gerer la BD
+            $controller = 'utilisateur';
+            $view = 'list';
+            $pagetitle = 'Liste des utilisateurs';
+            require(File::build_path(array("view", "view.php")));  //"redirige" vers la vue
+        } else {
+            ControllerProduit::showError("Vous n'avez pas l'autorisation de consulter la liste des utilisateurs");
+        }
+    }
+
+    /**
      * Confirme l'email d'un user
      */
     public static function validate()
@@ -179,7 +195,6 @@ class ControllerUtilisateur
         if (!empty($_SESSION['login'])) {
             $u = ModelUtilisateur::select($_SESSION['login']);
 
-
             $pseudo = $u->getPseudo();
             $email = $u->getEmail();
             $password = '';
@@ -191,6 +206,17 @@ class ControllerUtilisateur
             ControllerProduit::showError("Vous n'etes pas connecté");
         }
 
+    }
+
+    public static function changeAdminMode() {
+        if (ControllerProduit::csrfCheck() and $_SESSION['admin'] == 'true' and isset($_GET['id'])) {
+            $user = ModelUtilisateur::select($_GET['id']);
+            $user->setIsAdmin(!boolval($user->getIsAdmin()));
+
+            self::readAll();
+        } else {
+            ControllerProduit::showError("pas le droit");
+        }
     }
 
     /**
