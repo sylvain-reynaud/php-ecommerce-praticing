@@ -28,6 +28,7 @@
                 if($_SESSION['admin'] == 'true'){
                     echo <<<OEF
                     <li><a href="index.php?action=create&controller=ControllerProduit">Ajouter un produit</a></li>
+                    <li><a href="index.php?action=readAll&controller=ControllerUtilisateur">Liste des utilisateurs</a></li>
 OEF;
                 }
 
