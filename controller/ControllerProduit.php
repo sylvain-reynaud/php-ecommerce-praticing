@@ -239,6 +239,19 @@ class ControllerProduit
                 "prix" => $_POST['prix']
             );
 
+            if(!empty($_FILES['fileToUpload']) && is_uploaded_file($_FILES['fileToUpload']['tmp_name'])){
+                $name = $_FILES['fileToUpload']['name'];
+                $path = array("images", "$name");
+                $pic_path = File::build_path($path);
+                if (!move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $pic_path)) {
+                    echo "La copie a échoué";
+                }else{
+                $values['imageUrl'] = $name;
+                }
+            }
+
+            
+
             ModelProduit::update($values);
 
             self::readAll();
