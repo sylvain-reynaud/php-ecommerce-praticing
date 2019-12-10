@@ -94,9 +94,8 @@ require_once File::build_path(array("config","Conf.php"));
 			}
 			$set=rtrim($set ,"\t,");
 
-			var_dump($set);
+			
 			$sql = "UPDATE $table_name SET $set WHERE $primary_key =:$primary_key";
-			var_dump($sql);
 			$req_prep = Model::$pdo->prepare($sql);
 			$req_prep->execute($data);
 	

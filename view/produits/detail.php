@@ -1,4 +1,6 @@
 <?php
+global $CSRF_NAME;
+
 $url_product = "index.php?action=read&controller=ControllerProduit&id=" . urlencode($p->getId());
 $url_delete = "index.php?action=delete&controller=ControllerProduit&id=" . urlencode($p->getId())."&csrf_token=$_SESSION[$CSRF_NAME]";
 $url_update = "index.php?action=update&controller=ControllerProduit&id=" . urlencode($p->getId());

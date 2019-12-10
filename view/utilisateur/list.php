@@ -10,7 +10,7 @@
       <span class="title">'. htmlspecialchars($user->getPseudo()) .'</span>
       <p>'. htmlspecialchars($user->getEmail()) .'<br>
         </p>
-        <span class="secondary-content">Admin : <a href="index.php?action=changeAdminMode&controller=ControllerUtilisateur&id='. htmlspecialchars($user->getPseudo()) .'&csrf_token='.$_SESSION[$CSRF_NAME].'" <i class="material-icons">check_circle'. ($user->getIsAdmin() ? '' : '_outline') .'</i></a></span>
+        <span class="secondary-content">Admin : <a href="index.php?action=changeAdminMode&controller=ControllerUtilisateur&id='. htmlspecialchars($user->getPseudo()) .'&csrf_token='.$_SESSION[$CSRF_NAME].'"> <i class="material-icons">check_circle'. ($user->getIsAdmin() ? '' : '_outline') .'</i></a></span>
     </li>
   ';
     }

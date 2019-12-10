@@ -122,7 +122,6 @@
             $req_prep->setFetchMode(PDO::FETCH_CLASS, "ModelUtilisateur");
             $tab = $req_prep->fetchAll();
 
-            var_dump($tab);
             if(empty($tab)){
                 return false;
             }else{

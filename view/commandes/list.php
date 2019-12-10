@@ -15,10 +15,10 @@ if (!$tab) {
             $quantity = $item["quantity"];
             echo '<li>
                         <ul>
-                            <li>'.$quantity. 'x ' .$p->getName().'<ul>
-                            <li>'.$p->getPrice()*$quantity.' €<ul>
-                        </ul>
-                    </li><br>';
+                            <li>'.$quantity. 'x ' .$p->getName().'<li>
+                            <li>'.$p->getPrice()*$quantity.' €<li>
+                        </ul><br>
+                    </li>';
         }
 
         echo '</ul></div></li>';

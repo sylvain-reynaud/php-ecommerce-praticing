@@ -1,19 +1,21 @@
 <div class="row">
-<?php
+    <?php
     global $CSRF_NAME;
     foreach ($tab_prod as $p) {
         $url_product = "index.php?action=read&controller=ControllerProduit&id=" . urlencode($p->getId());
-        $url_delete = "index.php?action=delete&controller=ControllerProduit&id=" . urlencode($p->getId())."&csrf_token=$_SESSION[$CSRF_NAME]";
+        $url_delete = "index.php?action=delete&controller=ControllerProduit&id=" . urlencode($p->getId()) . "&csrf_token=$_SESSION[$CSRF_NAME]";
         $url_update = "index.php?action=update&controller=ControllerProduit&id=" . urlencode($p->getId());
-        $url_addToCart = "index.php?action=addToCart&controller=ControllerProduit&id=".urlencode($p->getId())."&csrf_token=$_SESSION[$CSRF_NAME]";
+        $url_addToCart = "index.php?action=addToCart&controller=ControllerProduit&id=" . urlencode($p->getId()) . "&csrf_token=$_SESSION[$CSRF_NAME]";
         echo '
     <div class="col s9 m3">
     <div class="card">
-    <a href="' . $url_product . '">
             <div class="card-image">
-                <img src="./images/' . htmlspecialchars($p->getImageUrl()) . '">
-                <a class="btn-floating halfway-fab waves-effect waves-light red" href="'.$url_addToCart.'"><i class="material-icons">add_shopping_cart</i></a>
-            </div></a>
+            
+                <a href="' . $url_product . '">
+                    <img src="./images/' . htmlspecialchars($p->getImageUrl()) . '" alt="imageProduit"/>
+                </a>
+                <a class="btn-floating halfway-fab waves-effect waves-light red" href="' . $url_addToCart . '"><i class="material-icons">add_shopping_cart</i></a>
+            </div>
             
             <div class="card-content">
                 <span class="card-title">' . htmlspecialchars($p->getName()) . '</span>
@@ -22,14 +24,14 @@
             <div class="card-action">
             <a href="' . $url_product . '">' . htmlspecialchars($p->getPrice()) . '€</a>
             ';
-            if($_SESSION['admin']=='true'){
-                echo '
+        if ($_SESSION['admin'] == 'true') {
+            echo '
                 <a href="' . $url_update . '">Modifier</a>
                 <a href="' . $url_delete . '">Supprimer</a>';
-            }
-            
+        }
 
-            echo '
+
+        echo '
 </div>
 </div>
         </div>' . "\n";
