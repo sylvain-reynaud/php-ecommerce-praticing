@@ -28,8 +28,10 @@
 </button>';
     } else {
         echo '
+        <li>
             <div class="col s9 m3">
                 <p>Aucun produit dans le panier</p>
-            </div></ul>';
+            </div>
+            </li></ul>';
     }
     ?>

@@ -10,7 +10,7 @@ echo '
 <div class="row">
 <!--    img  -->
     <div class="col s3">
-        <img class="materialboxed responsive-img" width="200" src="images/' . urlencode($p->getImageUrl()) . '">
+        <img class="materialboxed responsive-img" width="200" src="images/' . urlencode($p->getImageUrl()) . '" alt="image du produit">
     </div>
 <!--    titre + desc-->
     <div class="col s6">
@@ -32,7 +32,7 @@ echo '
         <h5>' . $titreLast . '</h5>
         <div class="card">
             <div class="card-image">
-                <img src="./images/' . htmlspecialchars($lastProductSeen->getImageUrl()) . '">
+                <img src="./images/' . htmlspecialchars($lastProductSeen->getImageUrl()) . '" alt="image du produit">
                 <a class="btn-floating halfway-fab waves-effect waves-light red" href="' . $url_addToCart . '"><i class="material-icons">add_shopping_cart</i></a>
             </div>
 
