@@ -1,3 +1,5 @@
 # php-ecommerce-praticing
 
-A project made in order to learn and practice PHP
+An eCommerce website made in order to learn and practice PHP
+
+No frameworks used
